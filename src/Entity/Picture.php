@@ -69,11 +69,17 @@ class Picture
      */
     private $pictureOfTheWeek;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture")
+     */
+    private $likes;
+
 
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
 
@@ -231,6 +237,36 @@ class Picture
     public function setPictureOfTheWeek(?PictureOfTheWeek $pictureOfTheWeek): self
     {
         $this->pictureOfTheWeek = $pictureOfTheWeek;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setPicture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): self
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getPicture() === $this) {
+                $like->setPicture(null);
+            }
+        }
 
         return $this;
     }
