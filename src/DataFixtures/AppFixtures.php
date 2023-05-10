@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
             $newPicture = new Picture();
 
             // 2. remplire les propriétés de mon nouvel objet
-            $newPicture->setPrompt("super prompt #" . $i);
+            $newPicture->setPrompt("mon super prompt #" . $i);
             $newPicture->setUrl("https://www.zupimages.net/up/23/18/8ptc.jpg"); 
             $newPicture->setNbClick(mt_rand(0,99));
             $newPicture->setCreatedAt(new DateTime('now'));
