@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ia;
 use App\Entity\Picture;
+use App\Entity\Review;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -44,9 +45,16 @@ class AppFixtures extends Fixture
 
             $newPicture->setIa($randomIa);
 
+            $newReview = new Review();
+
+            $newPicture->addReview($newReview->setContent('super image'));
+        
+
             $manager->persist($newPicture);
 
         }
+
+        
 
         $manager->flush();
     }

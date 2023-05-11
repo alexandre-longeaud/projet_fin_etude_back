@@ -84,12 +84,18 @@ class Picture
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="pictures")
+     */
+    private $review;
+
 
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->review = new ArrayCollection();
     }
 
 
@@ -279,6 +285,14 @@ class Picture
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReview(): Collection
+    {
+        return $this->review;
     }
 
 
