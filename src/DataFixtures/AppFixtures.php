@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ia;
 use App\Entity\Picture;
+use App\Entity\Review;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -47,6 +48,20 @@ class AppFixtures extends Fixture
             $manager->persist($newPicture);
 
         }
+
+        // * je constitue une liste commentaires
+        for ($i=0; $i < 4; $i++){
+            
+            $newReview = new Review();
+
+            $newReview->setContent("super image #" . $i);
+            $newReview->setCreatedAt(new DateTime('now'));
+
+            $manager->persist($newReview);
+
+
+        }
+        
 
         $manager->flush();
     }
