@@ -44,23 +44,30 @@ class AppFixtures extends Fixture
             $randomIa = $allIa[$randomIndexIa];
 
             $newPicture->setIa($randomIa);
-
-            $manager->persist($newPicture);
-
-        }
-
-        // * je constitue une liste commentaires
-        for ($i=0; $i < 4; $i++){
-            
             $newReview = new Review();
 
             $newReview->setContent("super image #" . $i);
+            
             $newReview->setCreatedAt(new DateTime('now'));
 
-            $manager->persist($newReview);
+    
 
+            $newPicture->addReview($newReview);
+            $manager->persist($newReview);
+            $manager->persist($newPicture);
 
         }
+        // * je constitue une liste commentaires
+       
+            
+           
+            
+
+
+        
+
+
+        
         
 
         $manager->flush();
