@@ -16,7 +16,7 @@ class PictureController extends AbstractController
   
      /**
      * Affiche les 30 images les plus récente en page d'accueil
-     * @Route("/pictures/home", name="app_api_picture_read", methods={"GET"})
+     * @Route("/pictures/home", name="app_api_picture_browseByCreatedAt", methods={"GET"})
      */
     public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
     {
@@ -39,7 +39,7 @@ class PictureController extends AbstractController
 
       /**
      * Affiche les 30 images les plus likés
-     * @Route("/pictures/liked", name="app_api_picture_read", methods={"GET"})
+     * @Route("/pictures/liked", name="app_api_picture_browseMostLiked", methods={"GET"})
      */
     public function browseMostLiked(PictureRepository $pictureRepository): JsonResponse
     {
