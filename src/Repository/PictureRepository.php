@@ -40,7 +40,7 @@ class PictureRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * retourne la list des 30 images les plus récent
+    //     * retourne la liste des 30 images les plus récentes
     //     */
     public function findPictureOrderByDate(): array
     {
@@ -51,6 +51,56 @@ class PictureRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+   /**
+    * retourne les 30 images les plus likées 
+    */
+
+    public function findPictureByLikes()
+    {
+        // recupere la connexion à la bdd
+        $conn = $this->getEntityManager()->getConnection();
+
+        // la requete qui correspond à cherche les films, trie les aléatoirement et garde en qu'un.
+        // movie m correspond à la table movie et pendant la requête on peut y faire référence avec la lettre m
+        $sql = '
+            SELECT * FROM `picture`
+            ORDER BY RAND() 
+            LIMIT 30
+            ';
+
+        // on execute la requête
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+
+        // returns an array
+        return $resultSet->fetchAssociative();
+    }
+   /**
+    * retourne les 30 images les plus vues 
+    */
+
+    public function findPictureByViews()
+    {
+        // recupere la connexion à la bdd
+        $conn = $this->getEntityManager()->getConnection();
+
+        // la requete qui correspond à cherche les films, trie les aléatoirement et garde en qu'un.
+        // movie m correspond à la table movie et pendant la requête on peut y faire référence avec la lettre m
+        $sql = '
+            SELECT * FROM `picture`
+            ORDER BY RAND() 
+            LIMIT 30
+            ';
+
+        // on execute la requête
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+
+        // returns an array
+        return $resultSet->fetchAssociative();
+    }
 //    /**
 //     * @return Picture[] Returns an array of Picture objects
 //     */
