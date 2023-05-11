@@ -52,22 +52,7 @@ class AppFixtures extends Fixture
 
     
 
-            $newPicture->addReview($newReview);
-            $manager->persist($newReview);
-            $manager->persist($newPicture);
 
-        }
-        // * je constitue une liste commentaires
-       
-            
-           
-            
-
-
-        
-
-
-        
         
 
         $manager->flush();

@@ -45,6 +45,7 @@ class Review
     private $user;
 
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -109,5 +110,6 @@ class Review
 
         return $this;
     }
+
 
 }
