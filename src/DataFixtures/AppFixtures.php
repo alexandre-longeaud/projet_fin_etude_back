@@ -44,15 +44,14 @@ class AppFixtures extends Fixture
             $randomIa = $allIa[$randomIndexIa];
 
             $newPicture->setIa($randomIa);
-
             $newReview = new Review();
 
-            $newPicture->addReview($newReview->setContent('super image'));
-        
+            $newReview->setContent("super image #" . $i);
+            
+            $newReview->setCreatedAt(new DateTime('now'));
 
-            $manager->persist($newPicture);
+    
 
-        }
 
         
 
