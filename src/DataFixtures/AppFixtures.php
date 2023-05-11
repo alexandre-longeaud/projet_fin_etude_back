@@ -45,22 +45,15 @@ class AppFixtures extends Fixture
 
             $newPicture->setIa($randomIa);
 
+            $newReview = new Review();
+
+            $newPicture->addReview($newReview->setContent('super image'));
+        
+
             $manager->persist($newPicture);
 
         }
 
-        // * je constitue une liste commentaires
-        for ($i=0; $i < 4; $i++){
-            
-            $newReview = new Review();
-
-            $newReview->setContent("super image #" . $i);
-            $newReview->setCreatedAt(new DateTime('now'));
-
-            $manager->persist($newReview);
-
-
-        }
         
 
         $manager->flush();
