@@ -6,6 +6,7 @@ use App\Repository\PictureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
@@ -16,46 +17,55 @@ class Picture
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"picture"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"picture"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=500)
+     * @Groups({"picture"})
      */
     private $prompt;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"picture"})
      */
     private $nbClick;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"picture"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"picture"})
      */
     private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture")
+     * @Groups({"picture"})
      */
     private $reviews;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
+     * @Groups({"picture"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
+     * @Groups({"picture"})
      */
     private $ia;
 

@@ -39,6 +39,18 @@ class PictureRepository extends ServiceEntityRepository
         }
     }
 
+    //    /**
+    //     * retourne la list des 30 images les plus récent
+    //     */
+    public function findPictureOrderByDate(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults(30)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Picture[] Returns an array of Picture objects
 //     */
