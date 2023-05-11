@@ -15,8 +15,8 @@ class AppFixtures extends Fixture
     {
         // * je constitue une liste des IA
         $allIa = [];
-        for ($i=0; $i < 5; $i++){
-           // 1. créer l'objet
+        for ($i=0; $i < 5; $i++) {
+            // 1. créer l'objet
             $newIa = new Ia();
             // 2. on met à jour les propriétés
             $newIa->setName("IA #" . $i);
@@ -30,14 +30,14 @@ class AppFixtures extends Fixture
 
         }
         // * je constitue une liste de 30 images
-        for ($i=0; $i < 31; $i++){
+        for ($i=0; $i < 31; $i++) {
             // 1. créer un objet Picture
             $newPicture = new Picture();
 
             // 2. remplire les propriétés de mon nouvel objet
             $newPicture->setPrompt("mon super prompt #" . $i);
-            $newPicture->setUrl("https://www.zupimages.net/up/23/18/8ptc.jpg"); 
-            $newPicture->setNbClick(mt_rand(0,99));
+            $newPicture->setUrl("https://www.zupimages.net/up/23/18/8ptc.jpg");
+            $newPicture->setNbClick(mt_rand(0, 99));
             $newPicture->setCreatedAt(new DateTime('now'));
 
             $randomIndexIa = mt_rand(0, count($allIa)-1);
@@ -47,14 +47,19 @@ class AppFixtures extends Fixture
             $newReview = new Review();
 
             $newReview->setContent("super image #" . $i);
-            
+
             $newReview->setCreatedAt(new DateTime('now'));
+            $newPicture->addReview($newReview);
+            $manager->persist($newReview);
+            $manager->persist($newPicture);
+            
 
-    
 
 
-        
 
-        $manager->flush();
+
+
+            $manager->flush();
+        }
     }
 }
