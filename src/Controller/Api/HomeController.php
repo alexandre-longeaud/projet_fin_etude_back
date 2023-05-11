@@ -23,12 +23,12 @@ class HomeController extends AbstractController
     }
 
      /**
-     * @Route("/list", name="listHome", methods={"GET"})
+     * @Route("/list", name="findPictureOrderByDate", methods={"GET"})
      */
     public function picturesHome(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->listHome();
-        return $this->json($picturesAtHome, 200, []);
+        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
+        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
 
      /**
@@ -40,6 +40,6 @@ class HomeController extends AbstractController
 
         if ($picture === null){return $this->json("messages d'erreur",Response::HTTP_NOT_FOUND);}
 
-        return $this->json($picture, 200, []);
+        return $this->json($picture, 200, [], ["groups"=>"picture"]);
     }
 }
