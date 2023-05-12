@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Provider\PictureProvider;
 use App\Entity\Ia;
 use App\Entity\Picture;
 use App\Entity\PictureOfTheWeek;
@@ -12,6 +13,7 @@ use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
+
 
 
 class AppFixtures extends Fixture
@@ -52,6 +54,9 @@ class AppFixtures extends Fixture
 
         // on tronque les tables
         $this->truncate();
+
+
+
 
 
                 // liste de Users
@@ -178,7 +183,9 @@ class AppFixtures extends Fixture
 
             // 2. remplire les propriétés de mon nouvel objet
             $newPicture->setPrompt("mon super prompt #" . $i);
-            $newPicture->setUrl("https://www.zupimages.net/up/23/18/8ptc.jpg");
+            $pictureIndex = new PictureProvider();
+            
+            $newPicture->setUrl($pictureIndex->pictureUrl());
             $newPicture->setNbClick(mt_rand(0, 99));
             $newPicture->setCreatedAt(new DateTime('now'));
             $newPicture->setUser($userMembre);
