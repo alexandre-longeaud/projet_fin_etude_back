@@ -92,6 +92,8 @@ class PictureController extends AbstractController
         return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
 
+    
+
 
 
 }
