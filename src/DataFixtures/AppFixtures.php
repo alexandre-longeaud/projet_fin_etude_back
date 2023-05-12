@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ia;
 use App\Entity\Picture;
+use App\Entity\PictureOfTheWeek;
 use App\Entity\Review;
 use App\Entity\Role;
 use App\Entity\User;
@@ -124,7 +125,7 @@ class AppFixtures extends Fixture
             $manager->persist($userChris);
     
     
-                //utilisateur membre
+                //utilisateurs membre
     
             $userMembre = new User();
             $userMembre->setPseudo('User-1');
@@ -140,7 +141,19 @@ class AppFixtures extends Fixture
             $manager->persist($roleUser);
             $manager->persist($userMembre);
     
-        
+
+            $userMembre2 = new User();
+            $userMembre2->setPseudo('User-2');
+            $userMembre2->setMail('user2@user2.com');
+            $roleUser->setCreatedAt(new DateTime('now'));
+            $userMembre2->setRole($roleUser);
+            $userMembre2->setPassword('$2y$13$42vU2RXvoHbRaZZ/InyT1.lvkCIF0GAu8BTvQTm6/tj9E4aLsfgtu');
+            $userMembre2->setBio('User2, inscrit sur Maisterpiece et membre actif sur le site');
+            $userMembre2->setAvatar('https://www.zupimages.net/up/23/18/wasp.jpg');
+            $userMembre2->setCreatedAt(new DateTime('now'));
+            $manager->persist($roleUser);
+            $manager->persist($userMembre2);
+            
         // * je constitue une liste des IA
         $allIa = [];
         for ($i=1; $i < 6; $i++) {
@@ -184,6 +197,22 @@ class AppFixtures extends Fixture
             $manager->persist($newReview);
             $manager->persist($newPicture);
         }
+
+
+        $newPictureOfTheWeek = new Picture();
+        $newPictureOfTheWeek->setPrompt("mon super prompt!");
+        $newPictureOfTheWeek->setUrl("https://www.zupimages.net/up/23/18/qs7v.jpg");
+        $newPictureOfTheWeek->setNbClick(mt_rand(20, 99));
+        $newPictureOfTheWeek->setCreatedAt(new DateTime('now'));
+        $newPictureOfTheWeek->setUser($userMembre2);
+        $pictureOfTheWeek = new PictureOfTheWeek();
+        $pictureOfTheWeek->addPicture($newPictureOfTheWeek);
+        $pictureOfTheWeek->setTimeStampWeek(new DateTime('now'));
+        $manager->persist($newPictureOfTheWeek);
+        $manager->persist($pictureOfTheWeek);
+    
+
+
 
 
             
