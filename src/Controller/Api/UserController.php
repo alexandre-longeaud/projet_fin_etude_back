@@ -1,38 +1,56 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/api", name="app_api_home")
+ */
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/user", name="app_user")
-     */
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
-
-    /**
-     * Permet à un utilisateur de modifier ses données personnel de son compte
-     * 
-     * @Route("/users/patct/{id}/account", name="app_api_users_patchUserAccount", requirements={"id"="\d+"}, methods={"PATCH"})
-     */
-    public function patchUserAccount(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
-
-
    
-    
+
+     /**
+     *Affiche le compte d'un utilisateur / Display user account
+     *  
+     * @Route("/users/{id}/account", name="app_users_browseAccountUser",requirements={"id"="\d+"}, methods={"GET"})
+     */
+    public function browseAccountUser(): JsonResponse
+    {
+        return $this->json([
+            'message' => 'Welcome to your new controller!',
+            'path' => 'src/Controller/UserController.php',
+        ]);
+    }
+
+    /**
+     * Permet de modifier le profil d'un utilisateur
+     * 
+     * @Route("/users/{id}/account/edit", name="app_users_editProfilUser",requirements={"id"="\d+"}, methods={"PUT"})
+     */
+    public function editProfilUser(): JsonResponse
+    {
+        return $this->json([
+            'message' => 'Welcome to your new controller!',
+            'path' => 'src/Controller/UserController.php',
+        ]);
+    }
+
+    /**
+    * Permet de modifier la biographie d'un utilisateur
+    *
+    * @Route("/users/{id}/account/edit", name="app_users_editAccountUser",requirements={"id"="\d+"}, methods={"PUT"})
+    */
+    public function editAccountUser(): JsonResponse
+    {
+        return $this->json([
+            'message' => 'Welcome to your new controller!',
+            'path' => 'src/Controller/UserController.php',
+        ]);
+    }
+
 }

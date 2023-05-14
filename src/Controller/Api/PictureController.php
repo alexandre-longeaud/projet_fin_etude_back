@@ -105,7 +105,7 @@ class PictureController extends AbstractController
     }
 
     /**********************************************************************************************************************************************************************************************************
-                                                                                       ACTION UTILISATEUR OU VISISTEUR / CALL TO ACTION USER OR VISITOR                                                                         
+                                                                                       ACTION UTILISATEUR / CALL TO ACTION USER                                                                        
      **********************************************************************************************************************************************************************************************************/
 
       /**
@@ -185,7 +185,7 @@ class PictureController extends AbstractController
     /**
     * Permet de faire une recherche par prompt / find picture by prompt
     * 
-    * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"GET"})
+    * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"POST"})
     */
     public function searchByPrompt(): JsonResponse
     {
@@ -198,7 +198,7 @@ class PictureController extends AbstractController
     /**
     * Permet de faire une recherche par tag / find picture by tag
     * 
-    * @Route("/pictures/search/tag", name="app_pictures_searchByTag", methods={"GET"})
+    * @Route("/pictures/search/tag", name="app_pictures_searchByTag", methods={"POST"})
     */
     public function searchByTag(): JsonResponse
     {
@@ -211,7 +211,7 @@ class PictureController extends AbstractController
      /**
     * Permet de faire une recherche par nom d'utilisateur / find pictures by user name
     * 
-    * @Route("/pictures/search/user", name="app_pictures_searchByUser", methods={"GET"})
+    * @Route("/pictures/search/user", name="app_pictures_searchByUser", methods={"POST"})
     */
     public function searchByUser(): JsonResponse
     {
