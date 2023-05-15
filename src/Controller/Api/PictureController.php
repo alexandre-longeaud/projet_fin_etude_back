@@ -88,8 +88,9 @@ class PictureController extends AbstractController
      */
     public function browseMostReviewed(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        $pictureReviewed = $pictureRepository->findByPictureMostReview();
+
+        return $this->json($pictureReviewed, 200);
     }
 
      /**
@@ -101,7 +102,6 @@ class PictureController extends AbstractController
         $picturesAtHome = $pictureRepository->findPictureOrderByDate();
         return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
-
     /**********************************************************************************************************************************************************************************************************
                                                                                        CONSULTER UN COMPTE UTILISATEUR/ SEE USER ACCOUNT                                                                          
      **********************************************************************************************************************************************************************************************************/
