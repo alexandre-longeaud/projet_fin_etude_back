@@ -83,7 +83,7 @@ class PictureRepository extends ServiceEntityRepository
     * retourne les 30 images les plus vues 
     */
 
-    public function findPictureByViews()
+    public function findPictureByNbClick()
     {
         // recupere la connexion à la bdd
         $conn = $this->getEntityManager()->getConnection();
@@ -91,9 +91,9 @@ class PictureRepository extends ServiceEntityRepository
         // la requete qui correspond à cherche les films, trie les aléatoirement et garde en qu'un.
         // movie m correspond à la table movie et pendant la requête on peut y faire référence avec la lettre m
         $sql = '
-            SELECT * FROM `picture`
-            ORDER BY RAND() 
-            LIMIT 30
+        SELECT * FROM `picture`
+        ORDER BY nb_click DESC
+        LIMIT 30            
             ';
 
         // on execute la requête
