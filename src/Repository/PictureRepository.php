@@ -63,10 +63,13 @@ class PictureRepository extends ServiceEntityRepository
         // la requete qui correspond à cherche les films, trie les aléatoirement et garde en qu'un.
         // movie m correspond à la table movie et pendant la requête on peut y faire référence avec la lettre m
         $sql = '
-            SELECT * FROM `picture`
-            ORDER BY RAND() 
-            LIMIT 30
-            ';
+        SELECT picture.*, COUNT(like.id) AS nombre_like FROM picture
+        INNER JOIN `like` ON picture.id = like.picture_id
+        GROUP BY picture.id
+        ORDER BY nombre_like DESC
+        LIMIT 30
+        
+        ';
 
         // on execute la requête
         $stmt = $conn->prepare($sql);
@@ -100,6 +103,22 @@ class PictureRepository extends ServiceEntityRepository
 
         // returns an array
         return $resultSet->fetchAssociative();
+    }
+
+    public function findPictureByNbClick() {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+                SELECT * FROM `picture`
+                ORDER BY nb_click DESC
+                LIMIT 30
+                ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+
+
     }
 //    /**
 //     * @return Picture[] Returns an array of Picture objects
