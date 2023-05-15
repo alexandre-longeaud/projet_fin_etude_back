@@ -39,6 +39,7 @@ class PictureOfTheWeekRepository extends ServiceEntityRepository
         }
     }
 
+    // TODO display all the informations for the picture of the week (commentes, like, views)
 //    /**
 //     * @return PictureOfTheWeek[] Returns an array of PictureOfTheWeek objects
 //     */
