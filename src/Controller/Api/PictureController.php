@@ -88,10 +88,10 @@ class PictureController extends AbstractController
      */
     public function browseMostReviewed(PictureRepository $pictureRepository): JsonResponse
     {
-        $pictureReviewed = $pictureRepository->findByPictureMostReview();
+    $pictureReviewed = $pictureRepository->findByPictureMostReview();
 
-        return $this->json($pictureReviewed, 200);
-    }
+    return $this->json($pictureReviewed, 200);
+    }    
 
      /**
      * Affiche les 30 images par IA / Display the 30 last pictures by AI
