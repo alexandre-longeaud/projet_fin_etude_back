@@ -11,7 +11,7 @@ class UserController extends AbstractController
 {
 
     /**
-     * Affiche la liste des utilisateurs
+     * Affiche la liste des utilisateurs 
      * 
      * @Route("/", name="app_back-office_users_browseUser", methods={"GET"})
      */
