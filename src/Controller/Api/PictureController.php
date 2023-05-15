@@ -77,8 +77,8 @@ class PictureController extends AbstractController
      */
     public function browseMostClicked(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        $picturesClicked = $pictureRepository->findPicturerByNbClic();
+        return $this->json($picturesClicked, 200, [],["groups"=>"picture"]);
     }
 
      /**
