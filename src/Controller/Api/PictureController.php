@@ -29,6 +29,18 @@ class PictureController extends AbstractController
         return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
 
+    /**
+     * Affiche l'image de la semaine/ Display picture of the week
+     * 
+     * @Route("/pictures/week", name="app_api_pictures_browsePictureWeek", methods={"GET"})
+     */
+    public function browsePictureWeek(PictureRepository $pictureRepository): JsonResponse
+    {
+        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
+        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+    }
+
+
      /**
      * Affiche l'image selectionnée / Display the selected picture
      * 
