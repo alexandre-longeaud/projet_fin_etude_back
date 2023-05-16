@@ -7,9 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/api", name="app_api_home")
+ * @Route("/api")
  */
 class PictureController extends AbstractController
 {
@@ -22,9 +23,11 @@ class PictureController extends AbstractController
      * Affiche les 30 images les plus récente en page d'accueil / Display the 30 most recents pictures on homepage
      * 
      * @Route("/pictures", name="app_api_pictures_browseByCreatedAt", methods={"GET"})
+     * @IsGranted("ROLE_USER")
      */
     public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
     {
+        dd($this->getUser());
         $picturesAtHome = $pictureRepository->findPictureOrderByDate();
         return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
