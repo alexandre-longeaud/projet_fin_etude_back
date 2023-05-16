@@ -105,7 +105,7 @@ class PictureController extends AbstractController
         $picturesIa = $pictureRepository->findPictureOrderByDate();
         return $this->json($picturesIa, 200, [],["groups"=>["picture"]]);
     }
-
+ 
     /**********************************************************************************************************************************************************************************************************
                                                                                        CONSULTER UN COMPTE UTILISATEUR/ SEE USER ACCOUNT                                                                          
      **********************************************************************************************************************************************************************************************************/
@@ -203,12 +203,12 @@ class PictureController extends AbstractController
     * 
     * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"POST"})
     */
-    public function searchByPrompt(): JsonResponse
+    public function searchByPrompt (PictureRepository $pictureRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+    
+            $promptSearch = $pictureRepository->findAllOrderByPrompt();
+        return $this->json($promptSearch, 200, [],["groups"=>["picture"]]);
+        
     }
 
     /**
