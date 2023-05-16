@@ -66,7 +66,7 @@ class PictureController extends AbstractController
      */
     public function browseMostLiked(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
+        $picturesAtHome = $pictureRepository->findPictureByLikes();
         return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
 
