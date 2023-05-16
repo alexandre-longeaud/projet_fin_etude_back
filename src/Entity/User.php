@@ -76,12 +76,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="user")
      */
-    private $picture;
+    private $pictures;
 
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
-        $this->picture = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
         $this->likes = new ArrayCollection();
     }
 
@@ -271,13 +271,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getPicture(): Collection
     {
-        return $this->picture;
+        return $this->pictures;
     }
 
     public function addPicture(Picture $picture): self
     {
-        if (!$this->picture->contains($picture)) {
-            $this->picture[] = $picture;
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
             $picture->setUser($this);
         }
 
@@ -286,7 +286,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removePicture(Picture $picture): self
     {
-        if ($this->picture->removeElement($picture)) {
+        if ($this->pictures->removeElement($picture)) {
             // set the owning side to null (unless already changed)
             if ($picture->getUser() === $this) {
                 $picture->setUser(null);
