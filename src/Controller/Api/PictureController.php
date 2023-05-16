@@ -23,7 +23,7 @@ class PictureController extends AbstractController
      * Affiche les 30 images les plus récente en page d'accueil / Display the 30 most recents pictures on homepage
      * 
      * @Route("/pictures", name="app_api_pictures_browseByCreatedAt", methods={"GET"})
-     * @IsGranted("ROLE_USER")
+     * 
      */
     public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
     {
