@@ -29,7 +29,7 @@ class PictureController extends AbstractController
     {
         dd($this->getUser());
         $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        return $this->json($picturesAtHome, 200, [],["groups"=>["picture"]]);
     }
 
     /**
@@ -39,8 +39,8 @@ class PictureController extends AbstractController
      */
     public function browsePictureWeek(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        $picturesOfTheWeek = $pictureRepository->findPictureOrderByDate();
+        return $this->json($picturesOfTheWeek, 200, [],["groups"=>["picture"]]);
     }
 
 
@@ -55,7 +55,7 @@ class PictureController extends AbstractController
 
         if ($picture === null){return $this->json("image inexistant",Response::HTTP_NOT_FOUND);}
 
-        return $this->json($picture, 200, [], ["groups"=>"picture"]);
+        return $this->json($picture, 200, [], ["groups"=>["picture"]]);
     }
 
     /**********************************************************************************************************************************************************************************************************
@@ -69,8 +69,8 @@ class PictureController extends AbstractController
      */
     public function browseMostLiked(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureByLikes();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        $picturesLiked = $pictureRepository->findPictureByLikes();
+        return $this->json($picturesLiked, 200, [],["groups"=>["picture"]]);
     }
 
       /**
@@ -81,7 +81,7 @@ class PictureController extends AbstractController
     public function browseMostClicked(PictureRepository $pictureRepository): JsonResponse
     {
         $picturesClicked = $pictureRepository->findPicturerByNbClic();
-        return $this->json($picturesClicked, 200, [],["groups"=>"picture"]);
+        return $this->json($picturesClicked, 200, [],["groups"=>["picture"]]);
     }
 
      /**
@@ -93,7 +93,7 @@ class PictureController extends AbstractController
     {
     $pictureReviewed = $pictureRepository->findByPictureMostReview();
 
-    return $this->json($pictureReviewed, 200);
+    return $this->json($pictureReviewed, 200, [],["groups"=>["picture"]]);
     }    
 
      /**
@@ -102,8 +102,8 @@ class PictureController extends AbstractController
      */
     public function browseMostByAi(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        $picturesIa = $pictureRepository->findPictureOrderByDate();
+        return $this->json($picturesIa, 200, [],["groups"=>["picture"]]);
     }
 
     /**********************************************************************************************************************************************************************************************************
@@ -116,8 +116,8 @@ class PictureController extends AbstractController
      */
     public function browsePicturesUser(PictureRepository $pictureRepository): JsonResponse
     {
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
+        $picturesUser = $pictureRepository->findPictureOrderByDate();
+        return $this->json($picturesUser, 200, [],["groups"=>["picture"]]);
     }
 
     /**********************************************************************************************************************************************************************************************************

@@ -36,6 +36,7 @@ class Review
 
     /**
      * @ORM\ManyToOne(targetEntity=Picture::class, inversedBy="reviews")
+     * @ORM\JoinColumn(name="picture_id", referencedColumnName="id")
      */
     private $picture;
 
@@ -92,9 +93,9 @@ class Review
         return $this->picture;
     }
 
-    public function setPicture(?Picture $picture): self
+    public function setPicture(?Picture $pictures): self
     {
-        $this->picture = $picture;
+        $this->picture = $pictures;
 
         return $this;
     }
