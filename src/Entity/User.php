@@ -72,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $likes;
 
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
