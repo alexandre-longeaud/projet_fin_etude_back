@@ -44,8 +44,13 @@ class PictureRepository extends ServiceEntityRepository
     //     */
     public function findPictureOrderByDate(): array
     {
-        return $this->createQueryBuilder('p')
-            ->orderBy('p.createdAt', 'DESC')
+        return $this->createQueryBuilder('picture')
+            ->select('picture, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar' )
+            ->leftJoin('picture.likes', 'l')
+            ->leftJoin('picture.reviews', 'review')
+            ->leftJoin('picture.user', 'user')
+            ->groupBy('picture.id')
+            ->orderBy('picture.createdAt', 'DESC')
             ->setMaxResults(30)
             ->getQuery()
             ->getResult();
@@ -58,9 +63,10 @@ class PictureRepository extends ServiceEntityRepository
     public function findPictureByLikes(): array
     {
         return $this->createQueryBuilder('picture')
-            ->select('picture, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review')
+            ->select('picture, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar' )
             ->leftJoin('picture.likes', 'l')
             ->leftJoin('picture.reviews', 'review')
+            ->leftJoin('picture.user', 'user')
             ->groupBy('picture.id')
             ->orderBy('nombre_like', 'DESC')
             ->setMaxResults(30)
@@ -74,6 +80,11 @@ class PictureRepository extends ServiceEntityRepository
     public function findPicturerByNbClic()
     {
         return $this->createQueryBuilder('picture')
+            ->select('picture, COUNT(r.id) AS nombre_review, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar')
+            ->leftJoin('picture.likes', 'l')
+            ->leftJoin('picture.reviews', 'r')
+            ->leftJoin('picture.user', 'user')
+            ->groupBy('picture.id')
             ->orderBy('picture.nbClick', 'DESC')
             ->setMaxResults(30)
             ->getQuery()
@@ -83,9 +94,10 @@ class PictureRepository extends ServiceEntityRepository
     public function findByPictureMostReview()
     {
         return $this->createQueryBuilder('picture')
-            ->select('picture, COUNT(r.id) AS nombre_review, COUNT(l.id) AS nombre_like')
+            ->select('picture, COUNT(r.id) AS nombre_review, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar')
             ->leftJoin('picture.likes', 'l')
             ->leftJoin('picture.reviews', 'r')
+            ->leftJoin('picture.user', 'user')
             ->groupBy('picture.id')
             ->orderBy('nombre_review', 'DESC')
             ->setMaxResults(30)
