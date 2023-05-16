@@ -23,7 +23,7 @@ class PictureController extends AbstractController
      * Affiche les 30 images les plus récente en page d'accueil / Display the 30 most recents pictures on homepage
      * 
      * @Route("/pictures", name="app_api_pictures_browseByCreatedAt", methods={"GET"})
-     * @IsGranted("ROLE_USER")
+     * 
      */
     public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
     {
@@ -128,6 +128,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de mettre un commentaire à une image
      * 
      * @Route("/pictures/{id}/review", name="app_api_pictures_addReview", requirements={"id"="\d+"}, methods={"POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function addReview(): JsonResponse
     {
@@ -141,6 +142,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de mettre un like à une image
      * 
      * @Route("/pictures/{id}/add/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function addLike(): JsonResponse
     {
@@ -151,9 +153,10 @@ class PictureController extends AbstractController
     }
 
      /**
-     * Permet à un utilisateur de mettre un like à une image
+     * Permet à un utilisateur d'enlever un like à une image
      * 
      * @Route("/pictures/{id}/dislike", name="app_api_pictures_dislike", requirements={"id"="\d+"}, methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
      */
     public function dislike(): JsonResponse
     {
@@ -171,7 +174,8 @@ class PictureController extends AbstractController
  /**
      * Permet à un utilisateur d'ajouter une image
      * 
-     * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
+     * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"}
+     * @IsGranted("ROLE_USER")
      */
     public function addPicture(): JsonResponse
     {
@@ -185,6 +189,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de supprimer une image
      * 
      * @Route("/pictures/{id}/delete", name="app_api_pictures_deletePicture", requirements={"id"="\d+"}, methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
      */
     public function deletePicture(): JsonResponse
     {

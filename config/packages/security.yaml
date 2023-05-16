@@ -40,8 +40,33 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+
+        # * Toutes les Url avec le mot back-office est restreint au role Admin.
+        - { path: ^/back-office, roles: ROLE_ADMIN }
+
+        # API
+        # Uniquement les users peuvent utiliser les route 'delete' soit pour supprimmer un like ou une image sur leurs compte
+        - { path: ^/api/pictures, roles: ROLE_USER, methods: DELETE }
+
+         # Uniquement les users peuvent mettre un commentaire à une image
+        - { path: ^/api/pictures/\d+/review, roles: ROLE_USER }
+
+        # Uniquement les users peuvent mettre un like à une image   
+        - { path: ^/api/pictures/\d+/like, roles: ROLE_USER } 
+
+        # Uniquement les users peuvent ajouter une image    
+        - { path: ^/api/pictures/add, roles: ROLE_USER } 
+
+        # Uniquement les users peuvent emprunter les routes 'users' qui mène à leurs compte    
+        - { path: ^/api/users, roles: ROLE_USER } 
+        
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+
+    # Pour économiser des lignes dans notre ACL et rendre l'application plus logique on hiérarchise les rôles
+    role_hierarchy:
+    # L'admin a les droits de l'utilisateur
+        ROLE_ADMIN: ROLE_USER
 
 when@test:
     security:

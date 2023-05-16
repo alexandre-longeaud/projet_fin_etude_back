@@ -18,6 +18,7 @@ class UserController extends AbstractController
      *Affiche le compte d'un utilisateur / Display user account
      *  
      * @Route("/users/{id}/account", name="app_users_browseAccountUser",requirements={"id"="\d+"}, methods={"GET"})
+     * @IsGranted("ROLE_USER")
      */
     public function browseAccountUser(): JsonResponse
     {
@@ -31,6 +32,7 @@ class UserController extends AbstractController
      * Permet de modifier le profil d'un utilisateur
      * 
      * @Route("/users/{id}/account/edit", name="app_users_editProfilUser",requirements={"id"="\d+"}, methods={"PUT"})
+     * @IsGranted("ROLE_USER")
      */
     public function editProfilUser(): JsonResponse
     {
@@ -44,6 +46,7 @@ class UserController extends AbstractController
     * Permet de modifier la biographie d'un utilisateur
     *
     * @Route("/users/{id}/account/edit", name="app_users_editAccountUser",requirements={"id"="\d+"}, methods={"PUT"})
+    * @IsGranted("ROLE_USER")
     */
     public function editAccountUser(): JsonResponse
     {
