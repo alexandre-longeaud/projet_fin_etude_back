@@ -27,7 +27,7 @@ class PictureController extends AbstractController
      */
     public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
     {
-        dd($this->getUser());
+        
         $picturesAtHome = $pictureRepository->findPictureOrderByDate();
         return $this->json($picturesAtHome, 200, [],["groups"=>["picture"]]);
     }
