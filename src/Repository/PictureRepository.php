@@ -58,8 +58,9 @@ class PictureRepository extends ServiceEntityRepository
     public function findPictureByLikes(): array
     {
         return $this->createQueryBuilder('picture')
-            ->select('picture, COUNT(l.id) AS nombre_like')
+            ->select('picture, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review')
             ->leftJoin('picture.likes', 'l')
+            ->leftJoin('picture.reviews', 'review')
             ->groupBy('picture.id')
             ->orderBy('nombre_like', 'DESC')
             ->setMaxResults(30)
@@ -82,13 +83,15 @@ class PictureRepository extends ServiceEntityRepository
     public function findByPictureMostReview()
     {
         return $this->createQueryBuilder('picture')
-        ->select('picture, COUNT(r.id) AS nombre_review')
-        ->leftJoin('picture.reviews', 'r')
-        ->groupBy('picture.id')
-        ->orderBy('nombre_review', 'DESC')
-        ->setMaxResults(30)
-        ->getQuery()
-        ->getResult();   }
+            ->select('picture, COUNT(r.id) AS nombre_review, COUNT(l.id) AS nombre_like')
+            ->leftJoin('picture.likes', 'l')
+            ->leftJoin('picture.reviews', 'r')
+            ->groupBy('picture.id')
+            ->orderBy('nombre_review', 'DESC')
+            ->setMaxResults(30)
+            ->getQuery()
+            ->getResult();  
+         }
 //    /**
 //     * @return Picture[] Returns an array of Picture objects
 //     */
