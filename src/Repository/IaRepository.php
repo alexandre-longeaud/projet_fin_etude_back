@@ -39,15 +39,13 @@ class IaRepository extends ServiceEntityRepository
         }
     }
 
-    // TODO display all the AI with the url
 
     public function findALLAI()
     {
         // recupere la connexion à la bdd
         $conn = $this->getEntityManager()->getConnection();
 
-        // la requete qui correspond à cherche les films, trie les aléatoirement et garde en qu'un.
-        // movie m correspond à la table movie et pendant la requête on peut y faire référence avec la lettre m
+       
         $sql = '
         SELECT * FROM `ia`
         ';
