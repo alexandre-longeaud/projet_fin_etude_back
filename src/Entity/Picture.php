@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  */
@@ -34,7 +35,7 @@ class Picture
     private $prompt;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @Groups({"picture"})
      */
     private $nbClick;
@@ -46,7 +47,7 @@ class Picture
     private $createdAt;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date")
      * @Groups({"picture"})
      */
     private $updatedAt;

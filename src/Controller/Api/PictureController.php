@@ -3,11 +3,18 @@
 namespace App\Controller\Api;
 
 use App\Repository\PictureRepository;
+use App\Entity\Picture;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Route("/api")
@@ -173,12 +180,40 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
      */
-    public function addPicture(): JsonResponse
+    public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager,ValidatorInterface $validator)
     {
+        //Je récupère les données avec l'object Request et sa méthode getContent()
+       $jsonRecu = $request->getContent();
+       //$jsonData=json_decode($jsonRecu);
+
+       try {
+        //Nous devons désérialiszer les données, pour cela on utilise l'object SerializerInterface et sa méthode déserialize(). 
+    //On lui passe en argument les données, on précise qu'on souhaite avoir les données en entité Picture, et pour terminer on précise le format de donnée recupérer (json)
+       $picture = $serializer->deserialize($jsonRecu, Picture::class,'json');
+
+       $picture->setCreatedAt(new \DateTimeImmutable());
+    //L'entityManagerInterface permet de récuperer et d'envoyer les données en bdd
+
+    //On vérifie si toutes les données correspondent bien aux validations souhaiter
+    $error=$validator->validate($picture);
+
+    //Si il y a des erreurs de validation, on renvoie un status 400 ppour prévenir qu'il y a un problème de validation
+    if(count($error)>0){
+        return $this->json($error,400);
+    }
+       $manager->persist($picture);
+       $manager->flush();
+       
+       return $this->json($picture,201,[],['groups'=> ["picture"]]);
+       }
+       //si l'encodage n'est pas bon, je retourne en format json un tableau(status et message d'erreur) et un status 400 (utise pour éviter que le front tombe sur un message d'erreur html illisible)
+       catch(NotEncodableValueException $e){
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+            'status'=>400,
+            'message'=> $e->getMessage()
+        ],400);
+       }
+      
     }
 
     /**
