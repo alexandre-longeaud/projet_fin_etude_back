@@ -45,6 +45,10 @@ security:
         - { path: ^/back-office, roles: ROLE_ADMIN }
 
         # API
+
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        
         # Uniquement les users peuvent utiliser les route 'delete' soit pour supprimmer un like ou une image sur leurs compte
         - { path: ^/api/pictures, roles: ROLE_USER, methods: DELETE }
 

@@ -27,8 +27,8 @@ class PictureController extends AbstractController
      */
     public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
     {
-        dd($this->getUser());
-        $picturesAtHome = $pictureRepository->findPictureOrderByDate();
+        
+        $picturesAtHome = $pictureRepository->findAll();
         return $this->json($picturesAtHome, 200, [],["groups"=>"picture"]);
     }
 
@@ -174,7 +174,7 @@ class PictureController extends AbstractController
  /**
      * Permet à un utilisateur d'ajouter une image
      * 
-     * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"}
+     * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
     public function addPicture(): JsonResponse
