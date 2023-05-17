@@ -3,11 +3,14 @@
 namespace App\Controller\Api;
 
 use App\Repository\PictureRepository;
+use App\Service\ImageSelectionService;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/api")
@@ -15,6 +18,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class PictureController extends AbstractController
 {
 
+    private $imageSelectionService;
+
+    public function __construct(ImageSelectionService $imageSelectionService)
+    {
+        $this->imageSelectionService = $imageSelectionService;
+    }
     /**********************************************************************************************************************************************************************************************************
                                                                                             PAGE ACCUEIL/HOMEPAGE
      **********************************************************************************************************************************************************************************************************/
@@ -37,13 +46,27 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/week", name="app_api_pictures_browsePictureWeek", methods={"GET"})
      */
-    public function browsePictureWeek(PictureRepository $pictureRepository): JsonResponse
+    public function browsePictureWeek(Request $request, PictureRepository $pictureRepository): Response
     {
-        $picturesOfTheWeek = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesOfTheWeek, 200, [],["groups"=>["picture"]]);
+        $endDate = new DateTime();
+        $startDate = (clone $endDate)->modify('-7 days');        
+        // Utilisez le service de sélection de l'image de la semaine pour obtenir l'image sélectionnée
+        $imageOfTheWeek = $this->imageSelectionService->selectImageOfTheWeek($startDate, $endDate);
+    
+        if (!$imageOfTheWeek) {
+            return $this->json(['error' => 'No image of the week selected'], 404);
+        }
+    
+        // Récupérez les informations complètes de l'image sélectionnée depuis le repository
+        $picture = $pictureRepository->findPicture($imageOfTheWeek->getId());
+    
+        if (!$picture) {
+            return $this->json(['error' => 'Picture not found'], 404);
+        }
+    
+        return $this->json($picture, 200, [], ['groups' => ['picture']]);
     }
-
-
+    
      /**
      * Affiche l'image selectionnée / Display the selected picture
      * 

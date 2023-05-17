@@ -153,6 +153,24 @@ class PictureRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * Recherche les images entre deux dates
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return Picture[]
+     */
+    public function findPicturesBetweenDates(\DateTime $startDate, \DateTime $endDate): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.createdAt >= :startDate')
+            ->andWhere('p.createdAt <= :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->getQuery()
+            ->getResult();
+    }
+
 
 
 
