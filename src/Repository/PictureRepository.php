@@ -105,6 +105,45 @@ class PictureRepository extends ServiceEntityRepository
             ->getResult();  
          }
 //    /**
+  //     * @return Prompt[] Returns an array of pictures objects by prompt / Retourne un tableau d'objets images par mot clé dans le prompt
+    //     */
+    public function findAllOrderByPrompt($search = null): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.prompt', 'ASC')
+            ->where("ia.name LIKE :search")
+            ->setParameter("search", "%" . $search . "%")
+            ->getQuery()
+            ->getResult();
+    }
+
+    //     * @return Tag[] Returns an array of pictures objects by tag / Retourne un tableau d'objets images par tag
+    //     */
+
+    public function findAllOrderByTag ($search = null): array
+    {
+    return $this->createQueryBuilder('t')
+    ->orderBy('p.tag', 'ASC')
+    ->where("tag.name LIKE :search")
+    ->setParameter("search", "%" . $search . "%")
+    ->getQuery()
+    ->getResult();
+}
+
+ //     * @return Author[] Returns an array of pictures objects by author / Retourne un tableau d'objets images par auteur
+    //     */
+
+    public function findAllOrderByAuthor ($search = null): array
+    {
+    return $this->createQueryBuilder('a')
+    ->orderBy('a.author', 'ASC')
+    ->where("author.name LIKE :search")
+    ->setParameter("search", "%" . $search . "%")
+    ->getQuery()
+    ->getResult();
+}
+
+
 //     * @return Picture[] Returns an array of Picture objects
 //     */
 //    public function findByExampleField($value): array

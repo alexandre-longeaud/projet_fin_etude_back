@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request ;
 
 /**
  * @Route("/api")
@@ -199,41 +200,43 @@ class PictureController extends AbstractController
      **********************************************************************************************************************************************************************************************************/
 
     /**
-    * Permet de faire une recherche par prompt / find picture by prompt
+    * Permet de faire une recherche d'images par prompt / find picture by prompt
     * 
     * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"POST"})
     */
-    public function searchByPrompt (PictureRepository $pictureRepository): JsonResponse
-    {
-    
-            $promptSearch = $pictureRepository->findAllOrderByPrompt();
-        return $this->json($promptSearch, 200, [],["groups"=>["picture"]]);
-        
-    }
+    public function searchByPrompt(PictureRepository $pictureRepository, Request $request): JsonResponse
+{
+    $search = $request->query->get('search'); // Récupérer le mot-clé de la requête
+
+    $promptSearch = $pictureRepository->findAllOrderByPrompt($search);
+    return $this->json($promptSearch, 200, [], ["groups" => ["picture"]]);
+}
+
 
     /**
-    * Permet de faire une recherche par tag / find picture by tag
+    * Permet de faire une recherche d'images par tag / find picture by tag
     * 
     * @Route("/pictures/search/tag", name="app_pictures_searchByTag", methods={"POST"})
     */
-    public function searchByTag(): JsonResponse
+    public function searchByTag(PictureRepository $pictureRepository, Request $request): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search'); // Récupérer le mot-clé de la requête
+
+    $promptSearch = $pictureRepository->findAllOrderByTag($search);
+    return $this->json($promptSearch, 200, [], ["groups" => ["picture"]]);
     }
 
      /**
-    * Permet de faire une recherche par nom d'utilisateur / find pictures by user name
+    * Permet de faire une recherche d'images par nom d'utilisateur / find pictures by user name
     * 
     * @Route("/pictures/search/user", name="app_pictures_searchByUser", methods={"POST"})
     */
-    public function searchByUser(): JsonResponse
+    public function searchByUser(PictureRepository $pictureRepository, Request $request): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search'); // Récupérer le mot-clé de la requête
+
+    $promptSearch = $pictureRepository->findAllOrderByAuthor($search);
+    return $this->json($promptSearch, 200, [], ["groups" => ["picture"]]);
     }
+
 }
