@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Picture;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Doctrine\ORM\Query\Expr\Func;
+use Doctrine\ORM\Query\Expr\Join;
 /**
  * @extends ServiceEntityRepository<Picture>
  *
@@ -91,6 +93,10 @@ class PictureRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+   /**
+    * retourne les 30 images les plus commentées 
+    */
+
     public function findByPictureMostReview()
     {
         return $this->createQueryBuilder('picture')
@@ -104,6 +110,52 @@ class PictureRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();  
          }
+
+
+   /**
+    * retourne l'image selectionnée 
+    */
+
+    public function findPicture($id)
+    {
+        $queryBuilder = $this->createQueryBuilder('picture');
+    
+        $pictureData = $queryBuilder
+            ->select('picture.id, picture.url, picture.prompt, picture.nbClick, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar, ia.id AS ia_id, ia.name AS ia_name, ia.link AS ia_link')
+            ->leftJoin('picture.likes', 'l')
+            ->leftJoin('picture.user', 'user')
+            ->leftJoin('picture.ia', 'ia')
+            ->andWhere('picture.id = :id')
+            ->setParameter('id', $id)
+            ->groupBy('picture.id, user.id, user.pseudo, user.avatar, ia.id, ia.name, ia.link')
+            ->getQuery()
+            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
+        
+        if ($pictureData) {
+            $reviewsData = $queryBuilder
+                ->resetDQLPart('select')
+                ->resetDQLPart('groupBy')
+                ->select('review.content AS review_content, reviewer.id AS reviewer_id, reviewer.pseudo AS reviewer_pseudo')
+                ->leftJoin('picture.reviews', 'review')
+                ->leftJoin('review.user', 'reviewer')
+                ->andWhere('picture.id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getResult(Query::HYDRATE_ARRAY);
+            
+            $pictureData['nombre_review'] = count($reviewsData);
+            $pictureData['reviews'] = $reviewsData;
+    
+            return $pictureData;
+        }
+    
+        return null;
+    }
+
+
+
+
+
 //    /**
 //     * @return Picture[] Returns an array of Picture objects
 //     */

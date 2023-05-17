@@ -51,7 +51,7 @@ class PictureController extends AbstractController
      */
     public function read($id, PictureRepository $pictureRepository): JsonResponse
     {
-        $picture = $pictureRepository->find($id);
+        $picture = $pictureRepository->findPicture($id);
 
         if ($picture === null){return $this->json("image inexistant",Response::HTTP_NOT_FOUND);}
 
