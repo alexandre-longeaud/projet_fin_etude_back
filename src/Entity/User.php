@@ -85,8 +85,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->likes = new ArrayCollection();
     }
 
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -122,16 +120,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
+    public function getRoles(): ?array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): self
@@ -141,10 +132,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -236,7 +224,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-     /**
+    /**
      * @return Collection<int, Review>
      */
     public function getReviews(): Collection
@@ -296,7 +284,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-     /**
+    /**
      * @return Collection<int, Like>
      */
     public function getLikes(): Collection
@@ -324,6 +312,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Picture>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
     }
 
 }

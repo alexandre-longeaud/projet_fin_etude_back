@@ -47,7 +47,7 @@ class Picture
     private $createdAt;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @Groups({"picture"})
      */
     private $updatedAt;
@@ -71,7 +71,7 @@ class Picture
     private $ia;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="picture")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
      */
     private $user;
 
@@ -85,20 +85,13 @@ class Picture
      */
     private $likes;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="pictures")
-     */
-    private $review;
-
 
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->review = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -134,7 +127,7 @@ class Picture
         return $this->nbClick;
     }
 
-    public function setNbClick(int $nbClick): self
+    public function setNbClick(?int $nbClick): self
     {
         $this->nbClick = $nbClick;
 
@@ -158,7 +151,7 @@ class Picture
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -287,14 +280,5 @@ class Picture
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Review>
-     */
-    public function getReview(): Collection
-    {
-        return $this->review;
-    }
-
 
 }

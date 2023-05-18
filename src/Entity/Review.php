@@ -45,8 +45,6 @@ class Review
      */
     private $user;
 
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -93,9 +91,9 @@ class Review
         return $this->picture;
     }
 
-    public function setPicture(?Picture $pictures): self
+    public function setPicture(?Picture $picture): self
     {
-        $this->picture = $pictures;
+        $this->picture = $picture;
 
         return $this;
     }

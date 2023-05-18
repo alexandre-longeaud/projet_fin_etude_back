@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Repository\PictureRepository;
 use App\Entity\Picture;
+use App\Repository\IaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -180,7 +182,7 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
      */
-    public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager,ValidatorInterface $validator)
+    public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager, IaRepository $iaRepository)
     {
         //Je récupère les données avec l'object Request et sa méthode getContent()
        $jsonRecu = $request->getContent();
@@ -195,12 +197,12 @@ class PictureController extends AbstractController
     //L'entityManagerInterface permet de récuperer et d'envoyer les données en bdd
 
     //On vérifie si toutes les données correspondent bien aux validations souhaiter
-    $error=$validator->validate($picture);
+    //$error=$validator->validate($picture);
 
-    //Si il y a des erreurs de validation, on renvoie un status 400 ppour prévenir qu'il y a un problème de validation
-    if(count($error)>0){
-        return $this->json($error,400);
-    }
+    //Si il y a des erreurs de validation, on renvoie un status 400 pour prévenir qu'il y a un problème de validation
+    //if(count($error)>0){
+    //    return $this->json($error,400);
+    //}
        $manager->persist($picture);
        $manager->flush();
        

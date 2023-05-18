@@ -18,6 +18,7 @@ class Ia
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"picture"})
      */
     private $id;
 
@@ -29,11 +30,13 @@ class Ia
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"picture"})
      */
     private $link;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
+     * @Groups({"picture"})
      */
     private $description;
 
@@ -48,7 +51,7 @@ class Ia
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="ia")
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="ia", cascade={"persist", "remove"})
      */
     private $pictures;
 
