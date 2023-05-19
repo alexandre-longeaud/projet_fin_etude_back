@@ -6,13 +6,14 @@ use App\Repository\PictureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  */
-class Picture
+class Picture 
 {
     /**
      * @ORM\Id
@@ -279,6 +280,23 @@ class Picture
         }
 
         return $this;
+    }
+
+    /**
+     * Check if the picture is liked by the given user.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function isLikedByUser(User $user): bool
+    {
+        foreach ($this->likes as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
