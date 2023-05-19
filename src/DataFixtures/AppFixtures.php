@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Provider\PictureProvider;
 use App\Entity\Ia;
+use App\Entity\Like;
 use App\Entity\Picture;
 use App\Entity\PictureOfTheWeek;
 use App\Entity\Review;
@@ -156,6 +157,8 @@ class AppFixtures extends Fixture
 
         }
         // * je constitue une liste de 30 images
+        $allPictures = [];
+        $allUsers = [$userBen, $userNico, $userAurelie, $userAlex, $userChris, $userMembre, $userMembre2];
         for ($i=0; $i < 31; $i++) {
             // 1. créer un objet Picture
             $newPicture = new Picture();
@@ -168,7 +171,9 @@ class AppFixtures extends Fixture
             $newPicture->setUrl($pictureIndex->pictureUrl());
             $newPicture->setNbClick(mt_rand(0, 99));
             $newPicture->setCreatedAt(new DateTime('now'));
-            $newPicture->setUser($userMembre);
+            $randomUserIndex = array_rand($allUsers);
+            $randomUser = $allUsers[$randomUserIndex];        
+            $newPicture->setUser($randomUser);
 
             $randomIndexIa = mt_rand(0, count($allIa)-1);
             $randomIa = $allIa[$randomIndexIa];
@@ -177,13 +182,39 @@ class AppFixtures extends Fixture
             $newReview = new Review();
 
             $newReview->setContent("super image #" . $i);
-            $newReview->setUser($userMembre);
+            $newReview->setUser($randomUser);
 
             $newReview->setCreatedAt(new DateTime('now'));
             $newPicture->addReview($newReview);
             $manager->persist($newReview);
             $manager->persist($newPicture);
+            $allPictures[] = $newPicture;
         }
+        // Parcourir la liste des utilisateurs pour leur faire aimer et commenter les images
+
+
+
+    foreach ($allUsers as $user) {
+        // Liker des images aléatoires
+        $likedPictures = array_rand($allPictures, mt_rand(1, count($allPictures)));
+
+        if (!is_array($likedPictures)) {
+            $likedPictures = [$likedPictures];
+        }
+
+        foreach ($likedPictures as $index) {
+            $picture = $allPictures[$index];
+        
+            $newLike = new Like();
+            $newLike->setUser($user);
+            $newLike->setPicture($picture);
+        
+            $picture->addLike($newLike);
+        
+            $manager->persist($newLike);
+            $manager->persist($picture);
+        }
+    }
 
 
         $newPictureOfTheWeek = new Picture();
