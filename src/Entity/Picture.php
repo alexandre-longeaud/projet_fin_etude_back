@@ -19,25 +19,25 @@ class Picture
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $prompt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $nbClick;
 
@@ -55,19 +55,19 @@ class Picture
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $reviews;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $ia;
 
@@ -298,5 +298,16 @@ class Picture
 
         return false;
     }
+
+    public function findLikeByUser(User $user): ?Like
+{
+    foreach ($this->likes as $like) {
+        if ($like->getUser() === $user) {
+            return $like;
+        }
+    }
+
+    return null;
+}
 
 }

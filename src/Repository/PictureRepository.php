@@ -152,6 +152,27 @@ class PictureRepository extends ServiceEntityRepository
         return null;
     }
 
+     //    /**
+    //     * Retourne un film par 
+    //     */
+    public function findAllByPrompt(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.prompt', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByPrompt(string $search): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->where('p.prompt LIKE :search')
+            ->setParameter('search', '%' . $search . '%');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 
 
 

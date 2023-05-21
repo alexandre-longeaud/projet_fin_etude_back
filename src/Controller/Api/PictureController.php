@@ -3,10 +3,10 @@
 namespace App\Controller\Api;
 
 use App\Repository\PictureRepository;
+use App\Repository\LikeRepository;
 use App\Entity\Picture;
 use App\Entity\Like;
 use App\Entity\User;
-use App\Repository\IaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -168,7 +168,16 @@ class PictureController extends AbstractController
 
         // Vérifier si l'utilisateur a déjà aimé cette image
         if ($picture->isLikedByUser($user)) {
-            return new JsonResponse(['message' => 'Vous avez déjà liké cette image'], 400);
+
+        $like = $picture->findLikeByUser($user);
+
+        $manager->remove($like);
+        $manager->flush();
+
+
+            return new JsonResponse(['message' => 'dislike ok !'], 201);
+
+            
         }
 
         // Créer une nouvelle entité Like
@@ -186,48 +195,7 @@ class PictureController extends AbstractController
         return new JsonResponse(['message' => 'Like ajouté avec succès.']);
     }
 
-     /**
-     * Permet à un utilisateur de mettre un like à une image
-     * 
-     * @Route("/pictures/{id}/dislike", name="app_api_pictures_dislike", requirements={"id"="\d+"}, methods={"DELETE"})
-     * IsGranted("ROLE_USER")
-     */
-    public function dislike(Request $request,Picture $picture, EntityManagerInterface $manager): JsonResponse
-    {
- // Récupérer l'utilisateur actuellement connecté (via le système d'authentification)
- $user = $this->getUser();
-
- // Vérifier si l'utilisateur est connecté
- if (!$user) {
-     // Retourner une réponse JSON avec un message d'erreur
-     return new JsonResponse(['message' => 'Vous devez être connecté pour supprimer un like.'], 401);
- }
-
- // Récupérer l'ID du like à supprimer depuis la requête
- $likeId = $request->request->get('like_id');
-
- // Vérifier si l'utilisateur a le droit de supprimer ce like
- $likeRepository = $manager->getRepository(Like::class);
- $like = $likeRepository->find($likeId);
-
- if (!$like || $like->getUser() !== $user) {
-     // Retourner une réponse JSON avec un message d'erreur
-     return new JsonResponse(['message' => 'Vous n\'avez pas la permission de supprimer ce like.'], 403);
- }
-
- // Supprimer le like
- 
- $manager->remove($like);
- $manager->flush();
-
- // Retourner une réponse JSON avec un message de succès
- return new JsonResponse(['message' => 'Like supprimé avec succès.']);
- 
-
-    }
-
-
-
+    
 
     /**********************************************************************************************************************************************************************************************************
                                                                                 ACTION COMPTE UTILISATEUR/ ACTION FROM USER ACCOUNT                                                                        
@@ -304,14 +272,18 @@ class PictureController extends AbstractController
     /**
     * Permet de faire une recherche par prompt / find picture by prompt
     * 
-    * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"POST"})
+    * @Route("/pictures/search", name="app_pictures_searchByPrompt", methods={"POST"})
     */
-    public function searchByPrompt(): JsonResponse
+    public function searchByPrompt(Request $request,EntityManagerInterface $manager): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search');
+    
+        $pictures = $manager->getRepository(Picture::class)->findByPrompt($search);
+
+        // Autres traitements ou rendus de la réponse...
+    
+        // Par exemple, retourner les images au format JSON
+        return $this->json($pictures, 200, [],["groups"=>["prompt"]]);
     }
 
     /**
