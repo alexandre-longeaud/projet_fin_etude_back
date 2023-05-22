@@ -329,11 +329,11 @@ class PictureController extends AbstractController
     * 
     * @Route("/pictures/search/user", name="app_pictures_searchByUser", methods={"POST"})
     */
-    public function searchByUser(): JsonResponse
+    public function searchByUser(Request $request,EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search');
+        $pictures = $manager->getRepository(Picture::class)->findByUser($search);
+
+        return $this->json($pictures, 200, [],["groups"=>["prompt"]]);
     }
 }

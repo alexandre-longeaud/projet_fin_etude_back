@@ -194,6 +194,23 @@ class PictureRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+
+    public function findByUser(string $search): array
+    {
+        $queryBuilder = $this->createQueryBuilder('picture')
+
+        ->select('picture, picture.id AS picture_id, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar')        
+        ->leftJoin('picture.likes', 'l')
+        ->leftJoin('picture.user', 'user')
+        ->leftJoin('picture.tags', 'tag')
+        ->groupBy('picture.id')
+        ->where('user.pseudo LIKE :search')
+        ->setParameter('search', '%' . $search . '%');
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
     /**
      * Recherche les images entre deux dates
      *
