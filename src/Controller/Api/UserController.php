@@ -2,8 +2,11 @@
 
 namespace App\Controller\Api;
 
+use App\Repository\PictureRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -19,12 +22,12 @@ class UserController extends AbstractController
      *  
      * @Route("/users/{id}/account", name="app_users_browseAccountUser",requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function browseAccountUser(): JsonResponse
+    public function browseAccountUser($id, UserRepository $userRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $user = $userRepository->findUser($id);
+
+        if ($user === null){return $this->json("user inexistant",Response::HTTP_NOT_FOUND);}
+        return $this->json($user, 200, [], ["groups"=>["picture"]]);
     }
 
     /**

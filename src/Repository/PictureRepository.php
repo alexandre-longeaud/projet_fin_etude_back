@@ -166,13 +166,33 @@ class PictureRepository extends ServiceEntityRepository
 
     public function findByPrompt(string $search): array
     {
-        $queryBuilder = $this->createQueryBuilder('p')
-            ->where('p.prompt LIKE :search')
-            ->setParameter('search', '%' . $search . '%');
+        $queryBuilder = $this->createQueryBuilder('picture')
+        ->select('picture, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar' )
+        ->leftJoin('picture.likes', 'l')
+        ->leftJoin('picture.reviews', 'review')
+        ->leftJoin('picture.user', 'user')
+        ->groupBy('picture.id')
+        ->where('picture.prompt LIKE :search')
+        ->setParameter('search', '%' . $search . '%');
 
         return $queryBuilder->getQuery()->getResult();
     }
 
+
+    public function findByTag(string $search): array
+    {
+        $queryBuilder = $this->createQueryBuilder('picture')
+        ->select('picture, picture.id AS picture_id, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar')        
+        ->leftJoin('picture.likes', 'l')
+        ->leftJoin('picture.reviews', 'review')
+        ->leftJoin('picture.user', 'user')
+        ->leftJoin('picture.tags', 'tag')
+        ->groupBy('picture.id')
+        ->where('tag.name LIKE :search')
+        ->setParameter('search', '%' . $search . '%');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 
     /**
      * Recherche les images entre deux dates

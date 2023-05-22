@@ -14,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
@@ -175,7 +174,7 @@ class PictureController extends AbstractController
       /**
      * Permet à un utilisateur de mettre un like à une image
      * 
-     * @Route("/pictures/{id}/add/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
+     * @Route("/pictures/{id}/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
      * IsGranted("ROLE_USER")
      */
     public function addLike(Picture $picture, EntityManagerInterface $manager): JsonResponse
@@ -314,12 +313,15 @@ class PictureController extends AbstractController
     * 
     * @Route("/pictures/search/tag", name="app_pictures_searchByTag", methods={"POST"})
     */
-    public function searchByTag(): JsonResponse
+    public function searchByTag(Request $request,EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search');
+        $pictures = $manager->getRepository(Picture::class)->findByTag($search);
+
+        return $this->json($pictures, 200, [],["groups"=>["prompt"]]);
+
+
+
     }
 
      /**
