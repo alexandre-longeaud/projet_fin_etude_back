@@ -98,7 +98,7 @@ class UserController extends AbstractController
 {
     $data= $request->getContent();
 
-    $user
+    
 
     // Vérifier si les clés existent dans le tableau de données
     if (isset($data['email'])) {
