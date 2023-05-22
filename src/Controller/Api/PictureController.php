@@ -174,7 +174,7 @@ class PictureController extends AbstractController
       /**
      * Permet à un utilisateur de mettre un like à une image
      * 
-     * @Route("/pictures/{id}/add/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
+     * @Route("/pictures/{id}/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
      * IsGranted("ROLE_USER")
      */
     public function addLike(Picture $picture, EntityManagerInterface $manager): JsonResponse
