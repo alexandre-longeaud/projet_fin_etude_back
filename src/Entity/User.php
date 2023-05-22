@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
@@ -25,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"picture"})
+     * @Groups({"picture","user"})
      * 
      */
     private $email;
@@ -38,12 +39,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"picture","user"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"picture"})
+     * @Groups({"picture","user"})
      */
     private $pseudo;
 
@@ -89,6 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reviews = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->roles= ['ROLE_USER'];
     }
 
     public function getId(): ?int
