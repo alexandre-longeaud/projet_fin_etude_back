@@ -6,36 +6,38 @@ use App\Repository\PictureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  */
-class Picture
+class Picture 
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $prompt;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Groups({"picture"})
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"picture","prompt"})
      */
     private $nbClick;
 
@@ -53,24 +55,24 @@ class Picture
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $reviews;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt"})
      */
     private $ia;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="picture")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
      */
     private $user;
 
@@ -84,20 +86,13 @@ class Picture
      */
     private $likes;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="pictures")
-     */
-    private $review;
-
 
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->review = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -133,7 +128,7 @@ class Picture
         return $this->nbClick;
     }
 
-    public function setNbClick(int $nbClick): self
+    public function setNbClick(?int $nbClick): self
     {
         $this->nbClick = $nbClick;
 
@@ -157,7 +152,7 @@ class Picture
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -288,12 +283,31 @@ class Picture
     }
 
     /**
-     * @return Collection<int, Review>
+     * Check if the picture is liked by the given user.
+     *
+     * @param User $user
+     * @return bool
      */
-    public function getReview(): Collection
+    public function isLikedByUser(User $user): bool
     {
-        return $this->review;
+        foreach ($this->likes as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
+    public function findLikeByUser(User $user): ?Like
+{
+    foreach ($this->likes as $like) {
+        if ($like->getUser() === $user) {
+            return $like;
+        }
+    }
+
+    return null;
+}
 
 }

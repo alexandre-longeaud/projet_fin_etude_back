@@ -42,6 +42,9 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+    role_hierarchy:
+    # L'admin a les droits du manager
+        ROLE_ADMIN: ROLE_USER
 
 when@test:
     security:

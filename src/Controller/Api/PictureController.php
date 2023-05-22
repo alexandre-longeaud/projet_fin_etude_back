@@ -3,14 +3,26 @@
 namespace App\Controller\Api;
 
 use App\Repository\PictureRepository;
+use App\Repository\LikeRepository;
+use App\Entity\Picture;
+use App\Entity\Like;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Service\ImageSelectionService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
+
 
 /**
  * @Route("/api")
@@ -164,28 +176,49 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de mettre un like à une image
      * 
      * @Route("/pictures/{id}/add/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
+     * IsGranted("ROLE_USER")
      */
-    public function addLike(): JsonResponse
+    public function addLike(Picture $picture, EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        
+        $user = $this->getUser();
+        
+
+        //Vérifier si l'utilisateur est connecté
+            if (!$user) {
+          return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+        }
+
+        // Vérifier si l'utilisateur a déjà aimé cette image
+        if ($picture->isLikedByUser($user)) {
+
+        $like = $picture->findLikeByUser($user);
+
+        $manager->remove($like);
+        $manager->flush();
+
+
+            return new JsonResponse(['message' => 'dislike ok !'], 201);
+
+            
+        }
+
+        // Créer une nouvelle entité Like
+        $like = new Like();
+        $like->setUser($user);
+        $like->setPicture($picture);
+
+        // Ajouter le like à l'entité Picture
+        $picture->addLike($like);
+
+        
+        $manager->persist($like);
+        $manager->flush();
+
+        return new JsonResponse(['message' => 'Like ajouté avec succès.']);
     }
 
-     /**
-     * Permet à un utilisateur de mettre un like à une image
-     * 
-     * @Route("/pictures/{id}/dislike", name="app_api_pictures_dislike", requirements={"id"="\d+"}, methods={"DELETE"})
-     */
-    public function dislike(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
-
+    
 
     /**********************************************************************************************************************************************************************************************************
                                                                                 ACTION COMPTE UTILISATEUR/ ACTION FROM USER ACCOUNT                                                                        
@@ -196,12 +229,41 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
      */
-    public function addPicture(): JsonResponse
+    public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager)
     {
+        //Je récupère les données avec l'object Request et sa méthode getContent()
+       $jsonRecu = $request->getContent();
+       //$jsonData=json_decode($jsonRecu);
+
+       try {
+        //Nous devons désérialiszer les données, pour cela on utilise l'object SerializerInterface et sa méthode déserialize(). 
+    //On lui passe en argument les données, on précise qu'on souhaite avoir les données en entité Picture, et pour terminer on précise le format de donnée recupérer (json)
+       $picture = $serializer->deserialize($jsonRecu, Picture::class,'json');
+
+       $picture->setCreatedAt(new \DateTimeImmutable());
+    //L'entityManagerInterface permet de récuperer et d'envoyer les données en bdd
+
+    //On vérifie si toutes les données correspondent bien aux validations souhaiter
+    //$error=$validator->validate($picture);
+
+    //Si il y a des erreurs de validation, on renvoie un status 400 pour prévenir qu'il y a un problème de validation
+    //if(count($error)>0){
+    //    return $this->json($error,400);
+    //}
+    
+       $manager->persist($picture);
+       $manager->flush();
+       
+       return $this->json($picture,201,[],['groups'=> ["picture"]]);
+       }
+       //si l'encodage n'est pas bon, je retourne en format json un tableau(status et message d'erreur) et un status 400 (utise pour éviter que le front tombe sur un message d'erreur html illisible)
+       catch(NotEncodableValueException $e){
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+            'status'=>400,
+            'message'=> $e->getMessage()
+        ],400);
+       }
+      
     }
 
     /**
@@ -209,13 +271,22 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/{id}/delete", name="app_api_pictures_deletePicture", requirements={"id"="\d+"}, methods={"DELETE"})
      */
-    public function deletePicture(): JsonResponse
+    public function deletePicture(int $id,EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+
+        
+        $picture = $manager->getRepository(Picture::class)->find($id);
+
+        if (!$picture) {
+            return new JsonResponse(['message' => 'Image non trouvé.'], 404);
+        }
+
+        $manager->remove($picture);
+        $manager->flush();
+
+        return new JsonResponse(['message' => 'Image supprimée avec succès.'],200);
     }
+    
 
     /**********************************************************************************************************************************************************************************************************
                                                                                        BARRE DE RECHERCHE/ SEARCH BAR                                                                   
@@ -224,14 +295,18 @@ class PictureController extends AbstractController
     /**
     * Permet de faire une recherche par prompt / find picture by prompt
     * 
-    * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"POST"})
+    * @Route("/pictures/search", name="app_pictures_searchByPrompt", methods={"POST"})
     */
-    public function searchByPrompt(): JsonResponse
+    public function searchByPrompt(Request $request,EntityManagerInterface $manager): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search');
+    
+        $pictures = $manager->getRepository(Picture::class)->findByPrompt($search);
+
+        // Autres traitements ou rendus de la réponse...
+    
+        // Par exemple, retourner les images au format JSON
+        return $this->json($pictures, 200, [],["groups"=>["prompt"]]);
     }
 
     /**
