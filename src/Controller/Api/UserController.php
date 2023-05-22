@@ -86,8 +86,46 @@ class UserController extends AbstractController
         $manager->persist($user);
         $manager->flush();
         
-        return new JsonResponse(['message' => 'User registered successfully'], Response::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Inscription créer avec succès!!'], Response::HTTP_CREATED);
     }
+
+    /**
+     * Mofifications des données utilisateurs
+     *
+     * @Route("/users/{id}", name="app_users_edit", methods={"PUT"})
+     */
+    public function updateUserData(array $data,EntityManagerInterface $manager,Request $request): void
+{
+    $data= $request->getContent();
+
+    $user
+
+    // Vérifier si les clés existent dans le tableau de données
+    if (isset($data['email'])) {
+        $this->setEmail($data['email']);
+    }
+    if (isset($data['password'])) {
+        // Hacher le nouveau mot de passe
+        $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
+        $this->setPassword($hashedPassword);
+    }
+    if (isset($data['pseudo'])) {
+        $this->setPseudo($data['pseudo']);
+    }
+    if (isset($data['bio'])) {
+        $this->setBio($data['bio']);
+    }
+    if (isset($data['avatar'])) {
+        $this->setAvatar($data['avatar']);
+    }
+    // Mettre à jour la date de mise à jour
+    $this->setUpdatedAt(new \DateTimeImmutable());
+
+    $user = $manager->getRepository(User::class)->find($userId);
+    $user->updateUserData($data);
+    $manager->flush();
+}
+
 
     }
 
