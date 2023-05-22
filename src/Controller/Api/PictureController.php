@@ -313,12 +313,15 @@ class PictureController extends AbstractController
     * 
     * @Route("/pictures/search/tag", name="app_pictures_searchByTag", methods={"POST"})
     */
-    public function searchByTag(): JsonResponse
+    public function searchByTag(Request $request,EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $search = $request->query->get('search');
+        $pictures = $manager->getRepository(Picture::class)->findByTag($search);
+
+        return $this->json($pictures, 200, [],["groups"=>["prompt"]]);
+
+
+
     }
 
      /**
