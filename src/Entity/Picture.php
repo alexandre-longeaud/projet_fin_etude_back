@@ -73,6 +73,7 @@ class Picture
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
+     * @Groups({"prompt"})
      */
     private $user;
 
@@ -83,6 +84,7 @@ class Picture
 
     /**
      * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture")
+     * @Groups({"prompt"})
      */
     private $likes;
 

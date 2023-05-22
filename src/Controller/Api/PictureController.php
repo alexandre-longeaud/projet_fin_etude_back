@@ -152,7 +152,7 @@ class PictureController extends AbstractController
       /**
      * Permet à un utilisateur de mettre un like à une image
      * 
-     * @Route("/pictures/{id}/add/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
+     * @Route("/pictures/{id}/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
      * IsGranted("ROLE_USER")
      */
     public function addLike(Picture $picture, EntityManagerInterface $manager): JsonResponse
@@ -166,19 +166,18 @@ class PictureController extends AbstractController
           return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
         }
 
-        // Vérifier si l'utilisateur a déjà aimé cette image
-        if ($picture->isLikedByUser($user)) {
-
-        $like = $picture->findLikeByUser($user);
-
-        $manager->remove($like);
-        $manager->flush();
-
-
-            return new JsonResponse(['message' => 'dislike ok !'], 201);
-
-            
-        }
+          
+          // Vérifier si l'utilisateur a déjà aimé cette image
+          if ($picture->isLikedByUser($user)) {
+  
+          $like = $picture->findLikeByUser($user);
+  
+          $manager->remove($like);
+          $manager->flush();
+  
+  
+              return new JsonResponse(['message' => 'dislike ok !'], 201);   
+          }
 
         // Créer une nouvelle entité Like
         $like = new Like();
@@ -195,6 +194,7 @@ class PictureController extends AbstractController
         return new JsonResponse(['message' => 'Like ajouté avec succès.']);
     }
 
+    
     
 
     /**********************************************************************************************************************************************************************************************************
