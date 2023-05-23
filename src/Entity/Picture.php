@@ -89,6 +89,12 @@ class Picture
      */
     private $likes;
 
+    /**
+     * @ORM\Column(type=)
+     *
+     * @var [type]
+     */
+    private $file;
      /**
      *
      * @Vich\UploadableField(mapping="picture_user", fileNameProperty="file")
