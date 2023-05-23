@@ -8,10 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
+ * @Vich\Uploadable
  */
 class Picture 
 {
@@ -85,6 +88,13 @@ class Picture
      * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture")
      */
     private $likes;
+
+     /**
+     *
+     * @Vich\UploadableField(mapping="picture_user", fileNameProperty="file")
+     * @var File
+     */
+    private  $imageFile;
 
 
     public function __construct()
