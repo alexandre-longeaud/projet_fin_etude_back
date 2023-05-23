@@ -12,6 +12,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 
 
+
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  * @Vich\Uploadable
@@ -89,12 +90,13 @@ class Picture
      */
     private $likes;
 
+
     /**
-     * @ORM\Column(type=)
+     * @ORM\Column(type="string", length=255)
      *
-     * @var [type]
      */
     private $file;
+
      /**
      *
      * @Vich\UploadableField(mapping="picture_user", fileNameProperty="file")
@@ -326,4 +328,45 @@ class Picture
     return null;
 }
 
+
+    /**
+     * Get the value of file
+     */ 
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set the value of file
+     *
+     * @return  self
+     */ 
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     * @return void
+     */
+    public function setImageFile(File $file =null)
+    {
+
+        $this->imageFile=$file;
+// Si le fichier existe, cela met à jour la date de création!!
+        if($file){
+            $this->createdAt =new \DateTime('now');
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
 }
