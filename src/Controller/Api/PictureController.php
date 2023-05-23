@@ -227,7 +227,7 @@ class PictureController extends AbstractController
     {
         
         $user = $this->getUser();
-        dd($user);
+       
         
 
         //Vérifier si l'utilisateur est connecté
