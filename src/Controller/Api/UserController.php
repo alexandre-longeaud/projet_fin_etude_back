@@ -92,6 +92,20 @@ class UserController extends AbstractController
         return new JsonResponse(['message' => 'Inscription créer avec succès!!'], Response::HTTP_CREATED);
     }
 
+    /**
+     * @Route("/users/info", name="app_api_users_info", methods={"GET"})
+     *
+     * @return void
+     */
+    public function info(): JsonResponse
+    {
+        $user = $this->getUser();
+
+        
+
+        return $this->json($user, Response::HTTP_OK, [], ["groups" => ["read:User:item"]]);
+    }
+
     }
 
 
