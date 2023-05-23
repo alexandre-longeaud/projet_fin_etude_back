@@ -357,7 +357,7 @@ class PictureController extends AbstractController
     /**
     * Permet de faire une recherche par prompt / find picture by prompt
     * 
-    * @Route("/pictures/search", name="app_pictures_searchByPrompt", methods={"POST"})
+    * @Route("/pictures/search/prompt", name="app_pictures_searchByPrompt", methods={"POST"})
     */
     public function searchByPrompt(Request $request,EntityManagerInterface $manager): Response
     {
