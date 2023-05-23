@@ -6,6 +6,7 @@ use App\Repository\ReviewRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ReviewRepository::class)
@@ -16,16 +17,19 @@ class Review
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"picture","prompt"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=500)
+     * @Groups({"picture","prompt"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"picture"})
      */
     private $createdAt;
 
@@ -37,11 +41,13 @@ class Review
     /**
      * @ORM\ManyToOne(targetEntity=Picture::class, inversedBy="reviews")
      * @ORM\JoinColumn(name="picture_id", referencedColumnName="id")
+     * 
      */
     private $picture;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
+     * @Groups({"picture"})
      */
     private $user;
 

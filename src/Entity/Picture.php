@@ -19,19 +19,19 @@ class Picture
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","delete"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","delete"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","delete"})
      */
     private $prompt;
 
@@ -43,13 +43,13 @@ class Picture
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"picture"})
+     * @Groups({"picture","delete"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"picture"})
+     * @Groups({"picture","delete"})
      */
     private $updatedAt;
 
@@ -61,7 +61,7 @@ class Picture
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","delete"})
      */
     private $tags;
 
@@ -73,6 +73,7 @@ class Picture
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
+     * @Groups({"Picture"})
      */
     private $user;
 
