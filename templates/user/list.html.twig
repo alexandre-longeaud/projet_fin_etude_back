@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}User list{% endblock %}
 
 {% block body %}
 
@@ -9,27 +9,41 @@
 		<thead>
 			<tr>
 				<th scope="col">Utilisateur</th>
-				<th scope="col">Contenu</th>
-				<th scope="col">Date</th>
+				<th scope="col">Pseudo</th>
+				<th scope="col">Email</th>
+				<th scope="col">Role</th>
 				<th scope="col">Actions</th>
 			</tr>
 		</thead>
 		<tbody>
-
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.email }}</td>
            
-                <tr>
-                    <th scope="row"></th>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <a href=""><i class="bi bi-eye btn btn-primary rounded mx-1"></i></a>
-                        <a href=""><i class="bi bi-pencil btn btn-warning rounded mx-1"></i></a>
-                        <a onclick="return confirm('Confirmer la suppression')" href=""><i class="bi bi-trash btn btn-danger rounded mx-1"></i></a>
-                    </td>
-                </tr>
-            
-		</tbody>
-	</table>
+                <td>
+                    {# on peut utiliser l'opérateur "in" de Twig pour afficher le rôle de l'utilisateur #}
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                    Administrateur
+                    {% elseif 'ROLE_MANAGER' in user.roles %}
+                    Gestionnaire
+                    {% elseif 'ROLE_USER' in user.roles %}
+                    Utilisateur
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('app_back_user_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 </div>
 {% endblock %}

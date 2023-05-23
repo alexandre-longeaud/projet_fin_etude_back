@@ -119,7 +119,7 @@ class PictureRepository extends ServiceEntityRepository
     public function findPicture($id)
     {
         $queryBuilder = $this->createQueryBuilder('picture');
-    
+
         $pictureData = $queryBuilder
             ->select('picture.id, picture.url, picture.prompt, picture.nbClick, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar, ia.id AS ia_id, ia.name AS ia_name, ia.link AS ia_link')
             ->leftJoin('picture.likes', 'l')
@@ -130,11 +130,9 @@ class PictureRepository extends ServiceEntityRepository
             ->groupBy('picture.id, user.id, user.pseudo, user.avatar, ia.id, ia.name, ia.link')
             ->getQuery()
             ->getOneOrNullResult(Query::HYDRATE_ARRAY);
-        
+    
         if ($pictureData) {
-            $reviewsData = $queryBuilder
-                ->resetDQLPart('select')
-                ->resetDQLPart('groupBy')
+            $reviewsData = $this->createQueryBuilder('picture')
                 ->select('review.content AS review_content, reviewer.id AS reviewer_id, reviewer.pseudo AS reviewer_pseudo')
                 ->leftJoin('picture.reviews', 'review')
                 ->leftJoin('review.user', 'reviewer')
@@ -142,7 +140,7 @@ class PictureRepository extends ServiceEntityRepository
                 ->setParameter('id', $id)
                 ->getQuery()
                 ->getResult(Query::HYDRATE_ARRAY);
-            
+    
             $pictureData['nombre_review'] = count($reviewsData);
             $pictureData['reviews'] = $reviewsData;
     
@@ -151,7 +149,6 @@ class PictureRepository extends ServiceEntityRepository
     
         return null;
     }
-
      //    /**
     //     * Retourne un film par 
     //     */
