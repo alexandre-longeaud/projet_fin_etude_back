@@ -30,7 +30,7 @@ class UserController extends AbstractController
     /**
      * Permet de modifier le profil d'un utilisateur
      * 
-     * @Route("/users/{id}/account/edit", name="app_users_editProfilUser",requirements={"id"="\d+"}, methods={"PUT"})
+     * @Route("/users/{id}/account/profil", name="app_users_editProfilUser",requirements={"id"="\d+"}, methods={"PUT"})
      */
     public function editProfilUser(): JsonResponse
     {
@@ -43,7 +43,7 @@ class UserController extends AbstractController
     /**
     * Permet de modifier la biographie d'un utilisateur
     *
-    * @Route("/users/{id}/account/edit", name="app_users_editAccountUser",requirements={"id"="\d+"}, methods={"PUT"})
+    * @Route("/users/{id}/account/bio", name="app_users_editAccountUser",requirements={"id"="\d+"}, methods={"PUT"})
     */
     public function editAccountUser(): JsonResponse
     {
