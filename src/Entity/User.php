@@ -31,8 +31,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"picture","user","read:User:item"})
-     * 
+     * @Groups({"picture","user","read:User:item","sign-up"})
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private $email;
 
@@ -45,13 +46,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"picture","user"})
+     * @Groups({"picture","user","sign-up"})
+     * @Assert\NotBlank
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"picture","user","read:User:item"})
+     * @Groups({"picture","user","read:User:item","sign-up"})
+     * @Assert\NotBlank
      */
     private $pseudo;
 

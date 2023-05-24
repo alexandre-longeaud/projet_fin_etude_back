@@ -88,8 +88,10 @@ class UserController extends AbstractController
         
         $manager->persist($user);
         $manager->flush();
+
+        return $this->json($user, Response::HTTP_OK, [], ["groups" => ["sign-up"]]);
         
-        return new JsonResponse(['message' => 'Inscription créer avec succès!!'], Response::HTTP_CREATED);
+        //return new JsonResponse(['message' => 'Inscription créer avec succès!!'], Response::HTTP_CREATED);
     }
 
     /**

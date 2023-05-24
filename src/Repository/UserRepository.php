@@ -37,7 +37,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findUser($id)
     {
         $qb = $this->createQueryBuilder('user');
-    
+
         $userData = $qb
             ->select('user.id, user.pseudo, user.email, user.bio, user.avatar, COUNT(DISTINCT p.id) AS total_pictures')
             ->leftJoin('user.pictures', 'p')
@@ -47,36 +47,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->groupBy('user.id, user.pseudo, user.email')
             ->getQuery()
             ->getOneOrNullResult(Query::HYDRATE_ARRAY);
-    
+        
         if ($userData) {
-            $picturesData = $qb
-                ->resetDQLPart('select')
-                ->resetDQLPart('groupBy')
+            $picturesData = $this->createQueryBuilder('user')
                 ->select('p.id AS picture_id')
-                ->addSelect('p.url AS picture_url')
+                ->addSelect('p.fileName AS picture_fileName')
                 ->addSelect('COUNT(DISTINCT pl.id) AS likesCount')
                 ->addSelect('COUNT(DISTINCT r.id) AS reviewsCount')
-                ->addSelect('ia.id AS ia_id')
-                ->addSelect('ia.name AS ia_name')
-                ->addSelect('ia.link AS ia_link')
-                ->addSelect('ia.description AS ia_description')
-                ->leftJoin('user.pictures', 'picture')
-                ->leftJoin('picture.likes', 'pl')
-                ->leftJoin('picture.reviews', 'r')
-                ->leftJoin('picture.ia', 'ia')
+                ->leftJoin('user.pictures', 'p')
+                ->leftJoin('p.likes', 'pl')
+                ->leftJoin('p.reviews', 'r')
                 ->andWhere('user.id = :id')
                 ->setParameter('id', $id)
-                ->groupBy('picture.id')
+                ->groupBy('p.id')
                 ->getQuery()
                 ->getResult(Query::HYDRATE_ARRAY);
-    
+        
             $userData['pictures'] = $picturesData;
-    
+        
             return $userData;
         }
-    
-        return null;
-    }
+        
+        return null;   
+      }
                     
 
             public function add(User $entity, bool $flush = false): void

@@ -24,13 +24,13 @@ class Ia
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"picture"})
+     * @Groups({"picture","add-review"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"picture"})
+     * @Groups({"picture","add-review"})
      */
     private $link;
 
