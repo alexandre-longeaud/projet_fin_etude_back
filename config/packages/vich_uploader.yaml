@@ -1,8 +1,6 @@
 vich_uploader:
     db_driver: orm
-    metadata:
-        type: attribute
-
+   
     mappings:
         picture_user:
             uri_prefix: /uploads/images
