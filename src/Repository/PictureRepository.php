@@ -46,17 +46,31 @@ class PictureRepository extends ServiceEntityRepository
     //     */
     public function findPictureOrderByDate(): array
     {
-        return $this->createQueryBuilder('picture')
-            ->select('picture, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar' )
-            ->leftJoin('picture.likes', 'l')
-            ->leftJoin('picture.reviews', 'review')
+        $queryBuilder = $this->createQueryBuilder('picture');
+
+        $queryBuilder
+            ->select('picture, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar')
             ->leftJoin('picture.user', 'user')
-            ->groupBy('picture.id')
             ->orderBy('picture.createdAt', 'DESC')
-            ->setMaxResults(30)
-            ->getQuery()
-            ->getResult();
-    }
+            ->setMaxResults(30);
+    
+        $subQueryLikes = $this->createQueryBuilder('subPictureLikes')
+            ->select('COUNT(l.id)')
+            ->leftJoin('subPictureLikes.likes', 'l')
+            ->where('subPictureLikes = picture')
+            ->getDQL();
+    
+        $subQueryReviews = $this->createQueryBuilder('subPictureReviews')
+            ->select('COUNT(r.id)')
+            ->leftJoin('subPictureReviews.reviews', 'r')
+            ->where('subPictureReviews = picture')
+            ->getDQL();
+    
+        $queryBuilder
+            ->addSelect(sprintf('(%s) AS nombre_like', $subQueryLikes))
+            ->addSelect(sprintf('(%s) AS nombre_review', $subQueryReviews));
+            return $queryBuilder->getQuery()->getResult();
+            }
 
    /**
     * retourne les 30 images les plus likées 
