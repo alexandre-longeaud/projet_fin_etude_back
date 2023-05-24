@@ -5,7 +5,10 @@
 {% block body %}
     <h1>Edit User</h1>
 
+    <form method="post" action="{{ path('app_back_user_update', {'id': user.id}) }}">
+        {{ form_widget(form) }}
+        <button type="submit">Save</button>
+    </form>
 
-    <a href="{{ path('app_back-office_users_browseUser') }}">back to list</a>
-
+    <a href="{{ path('app_back_office_users_browseUser') }}">Back to List</a>
 {% endblock %}
