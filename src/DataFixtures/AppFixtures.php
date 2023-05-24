@@ -168,7 +168,7 @@ class AppFixtures extends Fixture
             $newPicture->setPrompt("mon super prompt #" . $i);
             $pictureIndex = new PictureProvider();
             
-            $newPicture->setUrl($pictureIndex->pictureUrl());
+            $newPicture->setFileName($pictureIndex->pictureUrl());
             $newPicture->setNbClick(mt_rand(0, 99));
             $newPicture->setCreatedAt(new DateTime('now'));
             $randomUserIndex = array_rand($allUsers);
@@ -219,7 +219,7 @@ class AppFixtures extends Fixture
 
         $newPictureOfTheWeek = new Picture();
         $newPictureOfTheWeek->setPrompt("mon super prompt!");
-        $newPictureOfTheWeek->setUrl("https://www.zupimages.net/up/23/18/qs7v.jpg");
+        $newPictureOfTheWeek->setFileName("https://www.zupimages.net/up/23/18/qs7v.jpg");
         $newPictureOfTheWeek->setNbClick(mt_rand(20, 99));
         $newPictureOfTheWeek->setCreatedAt(new DateTime('now'));
         $newPictureOfTheWeek->setUser($userMembre2);

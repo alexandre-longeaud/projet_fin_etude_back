@@ -121,7 +121,7 @@ class PictureRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('picture');
 
         $pictureData = $queryBuilder
-            ->select('picture.id, picture.url, picture.prompt, picture.nbClick, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar, ia.id AS ia_id, ia.name AS ia_name, ia.link AS ia_link')
+            ->select('picture.id, picture.fileName, picture.prompt, picture.nbClick, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar, ia.id AS ia_id, ia.name AS ia_name, ia.link AS ia_link')
             ->leftJoin('picture.likes', 'l')
             ->leftJoin('picture.user', 'user')
             ->leftJoin('picture.ia', 'ia')
