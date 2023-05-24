@@ -221,7 +221,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de mettre un like à une image
      * 
      * @Route("/pictures/{id}/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
-     * IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_USER")
      */
     
      public function addLike(Picture $picture, EntityManagerInterface $manager): JsonResponse
@@ -275,9 +275,20 @@ class PictureController extends AbstractController
      * Permet à un utilisateur d'ajouter une image
      * 
      * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager, FileUploader $fileUploader,ValidatorInterface $validator)
     {
+
+        $user = $this->getUser();
+       
+        
+
+        //Vérifier si l'utilisateur est connecté
+            if (!$user) {
+          return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+        }
+        
         $fichier=($request->files->get("file"));
         //Je récupère les données avec l'object Request et sa méthode getContent()
         $data=$request->request->get("data");
@@ -293,6 +304,7 @@ class PictureController extends AbstractController
        
 
        $picture->setCreatedAt(new \DateTimeImmutable());
+       $picture->setUser($user);
     //L'entityManagerInterface permet de récuperer et d'envoyer les données en bdd
 
     //On vérifie si toutes les données correspondent bien aux validations souhaiter
