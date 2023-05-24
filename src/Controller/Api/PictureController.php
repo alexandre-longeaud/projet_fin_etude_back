@@ -260,6 +260,11 @@ class PictureController extends AbstractController
 
         $user = $this->getUser();
 
+        //Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+          }
+
         $fichier=($request->files->get("file"));
         //Je récupère les données avec l'object Request et sa méthode getContent()
         $data=$request->request->get("data");

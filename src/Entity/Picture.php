@@ -58,13 +58,13 @@ class Picture
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","add-picture"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","add-picture"})
      */
     private $ia;
 
