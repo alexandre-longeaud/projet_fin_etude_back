@@ -22,7 +22,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
-
+use App\Service\FileUploader;
+use Lcobucci\JWT\Validation\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/api")
@@ -274,27 +276,37 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
      */
-    public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager)
+    public function addPicture(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager, FileUploader $fileUploader,ValidatorInterface $validator)
     {
+        $fichier=($request->files->get("file"));
         //Je récupère les données avec l'object Request et sa méthode getContent()
-       $jsonRecu = $request->getContent();
+        $data=$request->request->get("data");
+        
+       
        //$jsonData=json_decode($jsonRecu);
 
        try {
         //Nous devons désérialiszer les données, pour cela on utilise l'object SerializerInterface et sa méthode déserialize(). 
     //On lui passe en argument les données, on précise qu'on souhaite avoir les données en entité Picture, et pour terminer on précise le format de donnée recupérer (json)
-       $picture = $serializer->deserialize($jsonRecu, Picture::class,'json');
+       $picture = $serializer->deserialize($data, Picture::class,'json');
+      // dd($picture);
+       
 
        $picture->setCreatedAt(new \DateTimeImmutable());
     //L'entityManagerInterface permet de récuperer et d'envoyer les données en bdd
 
     //On vérifie si toutes les données correspondent bien aux validations souhaiter
-    //$error=$validator->validate($picture);
+    $error=$validator->validate($picture);
 
     //Si il y a des erreurs de validation, on renvoie un status 400 pour prévenir qu'il y a un problème de validation
-    //if(count($error)>0){
-    //    return $this->json($error,400);
-    //}
+    if(count($error)>0){
+    return $this->json($error,400);
+    
+    }
+
+    $fileName= $fileUploader->upload($fichier);
+    //dd($fileName);
+    $picture->setFileName($fileName);
     
        $manager->persist($picture);
        $manager->flush();

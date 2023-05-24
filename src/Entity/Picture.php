@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -23,15 +24,11 @@ class Picture
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"picture","prompt","delete"})
-     */
-    private $url;
 
     /**
      * @ORM\Column(type="string", length=500)
      * @Groups({"picture","prompt","delete"})
+     * @Assert\NotBlank
      */
     private $prompt;
 
@@ -73,7 +70,7 @@ class Picture
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
-     * @Groups({"Picture"})
+     * @Groups({"picture"})
      */
     private $user;
 
@@ -87,6 +84,13 @@ class Picture
      */
     private $likes;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"picture"})
+     */
+    private $fileName;
+
+
 
     public function __construct()
     {
@@ -98,18 +102,6 @@ class Picture
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
     }
 
     public function getPrompt(): ?string
@@ -310,5 +302,17 @@ class Picture
 
     return null;
 }
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName(string $fileName): self
+    {
+        $this->fileName = $fileName;
+
+        return $this;
+    }
 
 }
