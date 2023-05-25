@@ -42,10 +42,9 @@ class UserEditType extends AbstractType
                 'multiple' => true,
                 // checkboxes (1 widget HTML par choix)
                 'expanded' => true,
-            ])
-            
-            
+            ])   
         ;
+
     }
 
     /**
