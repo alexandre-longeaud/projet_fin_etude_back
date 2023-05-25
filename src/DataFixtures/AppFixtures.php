@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Provider\IaProvider;
 use App\DataFixtures\Provider\PictureProvider;
 use App\Entity\Ia;
 use App\Entity\Like;
@@ -141,20 +142,17 @@ class AppFixtures extends Fixture
             $manager->persist($userMembre2);
             
         // * je constitue une liste des IA
+        $iaProvider = new IaProvider();
+        $iaData = $iaProvider->getIaData();
         $allIa = [];
-        for ($i=1; $i < 6; $i++) {
-            // 1. créer l'objet
+        foreach ($iaData as $ia) {
             $newIa = new Ia();
-            // 2. on met à jour les propriétés
-            $newIa->setName("IA #" . $i);
-            $newIa->setLink("https://www.bluewillow.ai/");
+            $newIa->setName($ia['name']);
+            $newIa->setLink($ia['link']);
             $newIa->setCreatedAt(new DateTime('now'));
-
-            // 3. insertion en BDD
-            // * 1. je donne à doctrine mon nouvel objet, pour qu'il en prenne connaissance
+            
             $manager->persist($newIa);
             $allIa[] = $newIa;
-
         }
         // * je constitue une liste de 30 images
         $allPictures = [];
