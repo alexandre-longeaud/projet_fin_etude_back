@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Picture;
 use Laminas\Code\Generator\DocBlock\Tag\AbstractTypeableTag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,6 +43,8 @@ class UserEditType extends AbstractType
                 // checkboxes (1 widget HTML par choix)
                 'expanded' => true,
             ])
+            
+            
         ;
     }
 
