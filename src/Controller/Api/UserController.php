@@ -77,7 +77,7 @@ class UserController extends AbstractController
     }
 
     /**
-    * Permet de modifier la biographie d'un utilisateur
+    * Permet de modifier la biographie d'un utilisateur connecté
     *
     * @Route("/users/{id}/account/bio", name="app_users_editAccountUser",requirements={"id"="\d+"}, methods={"PUT"})
     * @IsGranted("ROLE_USER")
