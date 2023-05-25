@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Provider\IaProvider;
 use App\DataFixtures\Provider\PictureProvider;
 use App\Entity\Ia;
 use App\Entity\Like;
@@ -142,12 +143,13 @@ class AppFixtures extends Fixture
             
         // * je constitue une liste des IA
         $allIa = [];
-        for ($i=1; $i < 6; $i++) {
+        for ($i=0; $i < 8; $i++) {
             // 1. créer l'objet
             $newIa = new Ia();
+            $iaIndex = new IaProvider;
             // 2. on met à jour les propriétés
-            $newIa->setName("IA #" . $i);
-            $newIa->setLink("https://www.bluewillow.ai/");
+            $newIa->setName($iaIndex->pictureiaName());
+            $newIa->setLink($iaIndex->pictureiaLink());
             $newIa->setCreatedAt(new DateTime('now'));
 
             // 3. insertion en BDD
