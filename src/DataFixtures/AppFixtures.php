@@ -142,21 +142,17 @@ class AppFixtures extends Fixture
             $manager->persist($userMembre2);
             
         // * je constitue une liste des IA
+        $iaProvider = new IaProvider();
+        $iaData = $iaProvider->getIaData();
         $allIa = [];
-        for ($i=0; $i < 8; $i++) {
-            // 1. créer l'objet
+        foreach ($iaData as $ia) {
             $newIa = new Ia();
-            $iaIndex = new IaProvider;
-            // 2. on met à jour les propriétés
-            $newIa->setName($iaIndex->pictureiaName());
-            $newIa->setLink($iaIndex->pictureiaLink());
+            $newIa->setName($ia['name']);
+            $newIa->setLink($ia['link']);
             $newIa->setCreatedAt(new DateTime('now'));
-
-            // 3. insertion en BDD
-            // * 1. je donne à doctrine mon nouvel objet, pour qu'il en prenne connaissance
+            
             $manager->persist($newIa);
             $allIa[] = $newIa;
-
         }
         // * je constitue une liste de 30 images
         $allPictures = [];
