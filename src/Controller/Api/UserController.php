@@ -13,6 +13,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 
 
@@ -28,6 +30,7 @@ class UserController extends AbstractController
      *Affiche le compte d'un utilisateur / Display user account
      *  
      * @Route("/users/{id}/account", name="app_users_browseAccountUser",requirements={"id"="\d+"}, methods={"GET"})
+     * IsGranted("ROLE_USER")
      */
     public function browseAccountUser($id, UserRepository $userRepository): JsonResponse
     {
@@ -41,26 +44,66 @@ class UserController extends AbstractController
      * Permet de modifier le profil d'un utilisateur
      * 
      * @Route("/users/{id}/account/profil", name="app_users_editProfilUser",requirements={"id"="\d+"}, methods={"PUT"})
+     * IsGranted("ROLE_USER")
      */
-    public function editProfilUser(): JsonResponse
+    public function editProfilUser(Request $request, User $user, UserPasswordHasherInterface $passwordHasher,EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $data = json_decode($request->getContent(), true);
+
+        // Vérifier et mettre à jour le pseudo si présent dans la requête
+        if (isset($data['pseudo'])) {
+            $user->setPseudo($data['pseudo']);
+        }
+    
+        // Vérifier et mettre à jour l'email si présent dans la requête
+        if (isset($data['email'])) {
+            $user->setEmail($data['email']);
+        }
+    
+        // Vérifier et mettre à jour le mot de passe si présent dans la requête
+        if (isset($data['password'])) {
+            $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+            $user->setPassword($hashedPassword);
+           
+        }
+
+        $user->setUpdatedAt(new \DateTimeImmutable());
+    
+        // Enregistrer les modifications dans la base de données
+        $manager->persist($user);
+        $manager->flush();
+    
+        return $this->json($user, 200, [],["groups"=>["update-account"]]);
     }
 
     /**
-    * Permet de modifier la biographie d'un utilisateur
+    * Permet de modifier la biographie d'un utilisateur connecté
     *
     * @Route("/users/{id}/account/bio", name="app_users_editAccountUser",requirements={"id"="\d+"}, methods={"PUT"})
+    * @IsGranted("ROLE_USER")
     */
-    public function editAccountUser(): JsonResponse
+    public function editAccountUser(request $request,User $user,EntityManagerInterface $manager): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $data = json_decode($request->getContent(), true);
+
+        // Vérifier et mettre à jour l'avatar si présent dans la requête
+        if (isset($data['avatar'])) {
+            $user->setAvatar($data['avatar']);
+        }
+    
+        // Vérifier et mettre à jour la bio si présente dans la requête
+        if (isset($data['bio'])) {
+            $user->setBio($data['bio']);
+        }
+
+        $user->setUpdatedAt(new \DateTimeImmutable());
+    
+        // Enregistrer les modifications dans la base de données
+        
+        $manager->persist($user);
+        $manager->flush();
+    
+        return $this->json($user, 200, [],["groups"=>["update-bio"]]);
     }
 
     /**
@@ -88,8 +131,10 @@ class UserController extends AbstractController
         
         $manager->persist($user);
         $manager->flush();
+
+        return $this->json($user, Response::HTTP_OK, [], ["groups" => ["sign-up"]]);
         
-        return new JsonResponse(['message' => 'Inscription créer avec succès!!'], Response::HTTP_CREATED);
+        //return new JsonResponse(['message' => 'Inscription créer avec succès!!'], Response::HTTP_CREATED);
     }
 
     /**

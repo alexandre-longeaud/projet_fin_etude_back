@@ -133,29 +133,6 @@ class PictureController extends AbstractController
     return $this->json($pictureReviewed, 200, [],["groups"=>["picture"]]);
     }    
 
-     /**
-     * Affiche les 30 images par IA / Display the 30 last pictures by AI
-     * @Route("/pictures/filtre/ia", name="app_api_pictures_browseMostByAi", methods={"GET"})
-     */
-    public function browseMostByAi(PictureRepository $pictureRepository): JsonResponse
-    {
-        $picturesIa = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesIa, 200, [],["groups"=>["picture"]]);
-    }
-
-    /**********************************************************************************************************************************************************************************************************
-                                                                                       CONSULTER UN COMPTE UTILISATEUR/ SEE USER ACCOUNT                                                                          
-     **********************************************************************************************************************************************************************************************************/
-
-     /**
-     * Affiche toute les images d'un utilisateur / Display all the pictures from an user
-     * @Route("/pictures/user/{id}/list", name="app_api_pictures_browsePicturesUser", requirements={"id"="\d+"}, methods={"GET"})
-     */
-    public function browsePicturesUser(PictureRepository $pictureRepository): JsonResponse
-    {
-        $picturesUser = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesUser, 200, [],["groups"=>["picture"]]);
-    }
 
     /**********************************************************************************************************************************************************************************************************
                                                                                        ACTION UTILISATEUR / CALL TO ACTION USER                                                                        
@@ -165,6 +142,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de mettre un commentaire à une image
      * 
      * @Route("/pictures/{id}/review", name="app_api_pictures_addReview", requirements={"id"="\d+"}, methods={"POST"})
+     * IsGranted("ROLE_USER")
      */
     public function addReview(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager,Picture $picture): JsonResponse
     {
@@ -206,7 +184,7 @@ class PictureController extends AbstractController
         $manager->persist($review);
         $manager->flush();
 
-        return $this->json($review, 201, [], ['groups'=> ["picture"]]);
+        return $this->json($review, 201, [], ['groups'=> ["add-review"]]);
     }
     //si l'encodage n'est pas bon, je retourne en format json un tableau(status et message d'erreur) et un status 400 (utise pour éviter que le front tombe sur un message d'erreur html illisible)
     catch(NotEncodableValueException $e) {
@@ -281,14 +259,13 @@ class PictureController extends AbstractController
     {
 
         $user = $this->getUser();
-       
-        
+
 
         //Vérifier si l'utilisateur est connecté
-            if (!$user) {
-          return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
-        }
-        
+        if (!$user) {
+            return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+          }
+
         $fichier=($request->files->get("file"));
         //Je récupère les données avec l'object Request et sa méthode getContent()
         $data=$request->request->get("data");
@@ -302,9 +279,10 @@ class PictureController extends AbstractController
        $picture = $serializer->deserialize($data, Picture::class,'json');
       // dd($picture);
        
-
+       //$picture->setUser($user);
        $picture->setCreatedAt(new \DateTimeImmutable());
        $picture->setUser($user);
+
     //L'entityManagerInterface permet de récuperer et d'envoyer les données en bdd
 
     //On vérifie si toutes les données correspondent bien aux validations souhaiter
@@ -323,7 +301,7 @@ class PictureController extends AbstractController
        $manager->persist($picture);
        $manager->flush();
        
-       return $this->json($picture,201,[],['groups'=> ["picture"]]);
+       return $this->json($picture,201,[],['groups'=> ["add-picture"]]);
        }
        //si l'encodage n'est pas bon, je retourne en format json un tableau(status et message d'erreur) et un status 400 (utise pour éviter que le front tombe sur un message d'erreur html illisible)
        catch(NotEncodableValueException $e){
@@ -370,7 +348,6 @@ class PictureController extends AbstractController
         return new Response('L\'image et les commentaires associés ont été supprimés avec succès.', Response::HTTP_OK);
     }
 
-        //return new JsonResponse(['message' => 'Image supprimée avec succès.'],200,[],['groups'=> ["delete"]]);
     
     
 

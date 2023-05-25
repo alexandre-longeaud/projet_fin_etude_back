@@ -27,7 +27,7 @@ class Picture
 
     /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"picture","prompt","delete"})
+     * @Groups({"picture","prompt","add-picture"})
      * @Assert\NotBlank
      */
     private $prompt;
@@ -40,7 +40,7 @@ class Picture
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"picture","delete"})
+     * @Groups({"picture"})
      */
     private $createdAt;
 
@@ -52,19 +52,19 @@ class Picture
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture")
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","add-review"})
      */
     private $reviews;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
-     * @Groups({"picture","prompt","delete"})
+     * @Groups({"picture","prompt","add-picture"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","add-picture"})
      */
     private $ia;
 

@@ -23,7 +23,7 @@ class Review
 
     /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"picture","prompt"})
+     * @Groups({"picture","prompt","add-review"})
      */
     private $content;
 
