@@ -20,12 +20,21 @@ class UserEditType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Courriel',
             ])
+            ->add('pseudo', TextType::class, [
+                'label' => 'pseudo',
+            ])
+            ->add('bio', TextType::class, [
+                'label' => 'bio',
+            ])
+            ->add('avatar', TextType::class, [
+                'label' => 'avatar',
+            ])
+
             ->add('roles', ChoiceType::class, [
                 // les choix
                 'choices' => [
                     // label, valeur
                     'Utilisateur' => 'ROLE_USER',
-                    'Gestionnaire' => 'ROLE_MANAGER',
                     'Administrateur' => 'ROLE_ADMIN',
                 ],
                 // $roles = array donc choix multiple

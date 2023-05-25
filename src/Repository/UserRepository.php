@@ -54,9 +54,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ->addSelect('p.fileName AS picture_fileName')
                 ->addSelect('COUNT(DISTINCT pl.id) AS likesCount')
                 ->addSelect('COUNT(DISTINCT r.id) AS reviewsCount')
+                ->addSelect('ia.name AS ia_name') // Ajouter le nom de l'IA
+                ->addSelect('ia.link AS ia_link') // Ajouter le lien de l'IA
                 ->leftJoin('user.pictures', 'p')
                 ->leftJoin('p.likes', 'pl')
                 ->leftJoin('p.reviews', 'r')
+                ->leftJoin('p.ia', 'ia') // Joindre la relation avec l'entité Ia
                 ->andWhere('user.id = :id')
                 ->setParameter('id', $id)
                 ->groupBy('p.id')
@@ -68,8 +71,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return $userData;
         }
         
-        return null;   
-      }
+        return null;
+          }
                     
 
             public function add(User $entity, bool $flush = false): void

@@ -40,7 +40,7 @@
                 <th>Images</th>
                 <td>
                     {% for picture in user.pictures %}
-                        <img src="{{ picture.url }}" alt="Picture {{ picture.id }}" style="max-width: 200px; max-height: 200px;">
+                        <img src="{{ picture.fileName }}" alt="Picture {{ picture.id }}" style="max-width: 200px; max-height: 200px;">
                     {% endfor %}
                 </td>            
                 </tr>            
