@@ -53,7 +53,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ->resetDQLPart('select')
                 ->resetDQLPart('groupBy')
                 ->select('p.id AS picture_id')
-                ->addSelect('p.url AS picture_url')
+                ->addSelect('p.fileName AS picture_fileName')
                 ->addSelect('COUNT(DISTINCT pl.id) AS likesCount')
                 ->addSelect('COUNT(DISTINCT r.id) AS reviewsCount')
                 ->addSelect('ia.id AS ia_id')
