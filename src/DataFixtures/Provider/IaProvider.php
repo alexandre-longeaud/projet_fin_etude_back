@@ -5,44 +5,46 @@ namespace App\DataFixtures\Provider;
 
 class IaProvider
 {
-    private $iaName = [
-        'Midjourney',
-        'Bluewillow',
-        'Dall-E',
-        'Stable Diffusion UI',
-        'Craiyon',
-        'Bing',
-        'Canva',
-        'NightCafé'
-        
+    private $iaData = [
+        [
+            'name' => 'Midjourney',
+            'link' => 'https://www.midjourney.com'
+        ],
+        [
+            'name' => 'Bluewillow',
+            'link' => 'https://www.bluewillow.ai'
+        ],
+        [
+            'name' => 'Dall-E',
+            'link' => 'https://openai.com/product/dall-e-2'
+        ],
+        [
+            'name' => 'Stable Diffusion UI',
+            'link' => 'https://github.com/AUTOMATIC1111/stable-diffusion-webui'
+        ],
+        [
+            'name' => 'Craiyon',
+            'link' => 'https://www.craiyon.com/'
+        ],
+        [
+            'name' => 'Bing',
+            'link' => 'https://www.bing.com/create'
+        ],
+        [
+            'name' => 'Canva',
+            'link' => 'https://www.canva.com/your-apps/text-to-image'
+        ],
+        [
+            'name' => 'NightCafé',
+            'link' => 'https://nightcafe.studio'
+        ]
     ];
 
-    private $iaLink = [
-        'https://www.midjourney.com',
-        'https://www.bluewillow.ai',
-        'https://openai.com/product/dall-e-2',
-        'https://github.com/AUTOMATIC1111/stable-diffusion-webui',
-        'https://www.craiyon.com/',
-        'https://www.bing.com/create',
-        'https://www.canva.com/your-apps/text-to-image',
-        'https://nightcafe.studio'
-    ];
-
-
-    /**
-     * Retourne une ia au hasard
+ /**
+     * Retourne le tableau contenant les noms et liens des IAs
      */
-    public function pictureiaName()
+    public function getIaData()
     {
-        return $this->iaName[array_rand($this->iaName)];
+        return $this->iaData;
     }
-
-        /**
-     * Retourne un lien ia au hasard
-     */
-    public function pictureiaLink()
-    {
-        return $this->iaLink[array_rand($this->iaLink)];
-    }
-
 }
