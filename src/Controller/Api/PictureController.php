@@ -142,7 +142,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de mettre un commentaire à une image
      * 
      * @Route("/pictures/{id}/review", name="app_api_pictures_addReview", requirements={"id"="\d+"}, methods={"POST"})
-     * IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_USER")
      */
     public function addReview(Request $request,SerializerInterface $serializer,EntityManagerInterface $manager,Picture $picture): JsonResponse
     {
@@ -317,7 +317,7 @@ class PictureController extends AbstractController
      * Permet à un utilisateur de supprimer une image
      * 
      * @Route("/pictures/{id}/delete", name="app_api_pictures_deletePicture", requirements={"id"="\d+"}, methods={"DELETE"})
-     * IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_USER")
      */
     public function deletePicture(EntityManagerInterface $entityManager, Picture $picture): Response
     {
