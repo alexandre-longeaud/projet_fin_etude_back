@@ -147,17 +147,17 @@ class PictureController extends AbstractController
     if($user === null) {
         $isLiked=false;
     } else {
-        //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
-        // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
-        $like=$likeRepository->findOneBy([
-            'user'=>$user,
-            'picture'=>$picture
-        ]);
-        //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
-        if ($like === null) {
-            $isLiked=false;
-        }
-
+    //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+    // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+    $like=$likeRepository->findOneBy([
+        'user'=>$user,
+        'picture'=>$picture
+    ]);
+    //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+    if ($like === null) {
+        $isLiked=false;
+    }
+}
         $picture['isLiked'] =$isLiked;
            
         $listPictures[]=[
@@ -165,7 +165,7 @@ class PictureController extends AbstractController
            // 'isLiked'=>$isLiked
         ];
 
-    }
+  
 }
 
         return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
@@ -192,16 +192,17 @@ class PictureController extends AbstractController
         if($user === null) {
             $isLiked=false;
         } else {
-            //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
-            // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
-            $like=$likeRepository->findOneBy([
-                'user'=>$user,
-                'picture'=>$picture
-            ]);
-            //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
-            if ($like === null) {
-                $isLiked=false;
-            }
+    //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+    // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+    $like=$likeRepository->findOneBy([
+        'user'=>$user,
+        'picture'=>$picture
+    ]);
+    //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+    if ($like === null) {
+        $isLiked=false;
+    }
+}
     
             $picture['isLiked'] =$isLiked;
                
@@ -210,7 +211,7 @@ class PictureController extends AbstractController
                // 'isLiked'=>$isLiked
             ];
     
-        }
+        
     }
 
         return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
@@ -238,16 +239,17 @@ class PictureController extends AbstractController
      if($user === null) {
          $isLiked=false;
      } else {
-         //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
-         // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
-         $like=$likeRepository->findOneBy([
-             'user'=>$user,
-             'picture'=>$picture
-         ]);
-         //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
-         if ($like === null) {
-             $isLiked=false;
-         }
+    //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+    // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+    $like=$likeRepository->findOneBy([
+        'user'=>$user,
+        'picture'=>$picture
+    ]);
+    //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+    if ($like === null) {
+        $isLiked=false;
+    }
+}
  
          $picture['isLiked'] =$isLiked;
             
@@ -256,7 +258,7 @@ class PictureController extends AbstractController
             // 'isLiked'=>$isLiked
          ];
  
-     }
+     
  }
 
     return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
