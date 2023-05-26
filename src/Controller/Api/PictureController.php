@@ -276,8 +276,8 @@ class PictureController extends AbstractController
        try {
         //Nous devons désérialiszer les données, pour cela on utilise l'object SerializerInterface et sa méthode déserialize(). 
     //On lui passe en argument les données, on précise qu'on souhaite avoir les données en entité Picture, et pour terminer on précise le format de donnée recupérer (json)
-       $picture = $serializer->deserialize($data, Picture::class,'json');
-      // dd($picture);
+    $picture = $serializer->deserialize($data, Picture::class,'json');
+    //dd($picture);
        
        //$picture->setUser($user);
        $picture->setCreatedAt(new \DateTimeImmutable());

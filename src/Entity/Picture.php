@@ -57,7 +57,7 @@ class Picture
     private $reviews;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
+     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture",cascade={"persist"})
      * @Groups({"picture","prompt","add-picture"})
      */
     private $tags;
