@@ -33,7 +33,7 @@ class FileUploader
             // ... handle exception if something happens during file upload
         }
 
-        return $fileName;
+        return $this->getTargetDirectory() . '/' . $fileName; // Retourne le chemin complet de l'image
     }
 
     public function getTargetDirectory(): string
