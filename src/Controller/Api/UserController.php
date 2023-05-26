@@ -30,7 +30,6 @@ class UserController extends AbstractController
      *Affiche le compte d'un utilisateur / Display user account
      *  
      * @Route("/users/{id}/account", name="app_users_browseAccountUser",requirements={"id"="\d+"}, methods={"GET"})
-     * @IsGranted("ROLE_USER")
      */
     public function browseAccountUser($id, UserRepository $userRepository): JsonResponse
     {
