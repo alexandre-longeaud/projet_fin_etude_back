@@ -340,4 +340,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->pictures;
     }
 
+    public function getLikedPictures(){
+        $pictures= [];
+
+        foreach ($this->likes as $like) {
+            $pictures[]=$like->getPicture();
+        }
+
+        return $pictures;
+    }
+
 }

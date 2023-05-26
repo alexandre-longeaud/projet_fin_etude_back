@@ -143,7 +143,13 @@ class UserController extends AbstractController
      */
     public function info(): JsonResponse
     {
+        /**
+         * 
+         * @var User $user
+         */
         $user = $this->getUser();
+        $user->getLikedPictures();
+        dd($user->getLikedPictures());
 
         
 

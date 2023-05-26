@@ -48,11 +48,41 @@ class PictureController extends AbstractController
      * @Route("/pictures", name="app_api_pictures_browseByCreatedAt", methods={"GET"})
      * 
      */
-    public function browseByCreatedAt(PictureRepository $pictureRepository): JsonResponse
+    public function browseByCreatedAt(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
     {
-        
+        $user = $this->getUser();
+        $listPictures=[];
+        //On récupères les 30 dernière images les plus récente 
         $picturesAtHome = $pictureRepository->findPictureOrderByDate();
-        return $this->json($picturesAtHome, 200, [],["groups"=>["picture"]]);
+        //Pour chaque image, on boucle sur chaque image 
+        foreach ($picturesAtHome as $picture) {
+            //On détermine si une image liké en metant une variable par défault à true
+            $isLiked=true;
+            //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
+            if($user === null){
+                $isLiked=false;
+            }else{
+            //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+            // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+                $like=$likeRepository->findOneBy([
+                    'user'=>$user,
+                    'picture'=>$picture
+                ]);
+                //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+                if ($like === null){
+                    $isLiked=false;
+                }
+            }
+
+            $picture['isLiked'] =$isLiked;
+           
+            $listPictures[]=[
+                'picture'=>$picture,
+               // 'isLiked'=>$isLiked
+            ];
+
+        }
+        return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
     }
 
     /**
@@ -93,9 +123,8 @@ class PictureController extends AbstractController
         if ($picture === null){return $this->json("image inexistant",Response::HTTP_NOT_FOUND);}
 
         return $this->json($picture, 200, [], ["groups"=>["picture"]]);
-    }
-
-    /**********************************************************************************************************************************************************************************************************
+    }  
+      /**********************************************************************************************************************************************************************************************************
                                                                                        FILTRES PAGE ACCUEIL/FILTER HOMEPAGE                                                                          
      **********************************************************************************************************************************************************************************************************/
 
@@ -104,10 +133,42 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/filtre/liked", name="app_api_picture_browseMostLiked", methods={"GET"})
      */
-    public function browseMostLiked(PictureRepository $pictureRepository): JsonResponse
+    public function browseMostLiked(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
     {
+        $user = $this->getUser();
+        $listPictures=[];
         $picturesLiked = $pictureRepository->findPictureByLikes();
-        return $this->json($picturesLiked, 200, [],["groups"=>["picture"]]);
+
+         //Pour chaque image, on boucle sur chaque image 
+    foreach ($picturesLiked as $picture) {
+    //On détermine si une image liké en metant une variable par défault à true
+    $isLiked=true;
+    //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
+    if($user === null) {
+        $isLiked=false;
+    } else {
+        //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+        // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+        $like=$likeRepository->findOneBy([
+            'user'=>$user,
+            'picture'=>$picture
+        ]);
+        //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+        if ($like === null) {
+            $isLiked=false;
+        }
+
+        $picture['isLiked'] =$isLiked;
+           
+        $listPictures[]=[
+            'picture'=>$picture,
+           // 'isLiked'=>$isLiked
+        ];
+
+    }
+}
+
+        return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
     }
 
       /**
@@ -115,10 +176,44 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/filtre/clicked", name="app_api_picture_browseMostClicked", methods={"GET"})
      */
-    public function browseMostClicked(PictureRepository $pictureRepository): JsonResponse
+    public function browseMostClicked(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
     {
+
+        $user = $this->getUser();
+        $listPictures=[];
+
         $picturesClicked = $pictureRepository->findPicturerByNbClic();
-        return $this->json($picturesClicked, 200, [],["groups"=>["picture"]]);
+
+               //Pour chaque image, on boucle sur chaque image 
+    foreach ($picturesClicked as $picture) {
+        //On détermine si une image liké en metant une variable par défault à true
+        $isLiked=true;
+        //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
+        if($user === null) {
+            $isLiked=false;
+        } else {
+            //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+            // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+            $like=$likeRepository->findOneBy([
+                'user'=>$user,
+                'picture'=>$picture
+            ]);
+            //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+            if ($like === null) {
+                $isLiked=false;
+            }
+    
+            $picture['isLiked'] =$isLiked;
+               
+            $listPictures[]=[
+                'picture'=>$picture,
+               // 'isLiked'=>$isLiked
+            ];
+    
+        }
+    }
+
+        return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
     }
 
      /**
@@ -126,11 +221,45 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/filtre/reviewed", name="app_api_pictures_browseMostReviewed", methods={"GET"})
      */
-    public function browseMostReviewed(PictureRepository $pictureRepository): JsonResponse
+    public function browseMostReviewed(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
     {
+
+        $user = $this->getUser();
+        $listPictures=[];
+
+    
     $pictureReviewed = $pictureRepository->findByPictureMostReview();
 
-    return $this->json($pictureReviewed, 200, [],["groups"=>["picture"]]);
+    //Pour chaque image, on boucle sur chaque image 
+    foreach ( $pictureReviewed as $picture) {
+     //On détermine si une image liké en metant une variable par défault à true
+     $isLiked=true;
+     //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
+     if($user === null) {
+         $isLiked=false;
+     } else {
+         //Si utilisateur connecté, on vas déterminé pour cette image ci, on détermine si elle est liké ou non par cette utilisateur
+         // On instancie la méthode finOneBy du repo et lui passe une tableau associatiif pour qu'il compare les user vs picture (relation many to many sans attribut) soit les deux clés étrangère prsente dans la table like.
+         $like=$likeRepository->findOneBy([
+             'user'=>$user,
+             'picture'=>$picture
+         ]);
+         //si c'est = à null il n'y pas à de relation entre user et picture et donc pas de like.
+         if ($like === null) {
+             $isLiked=false;
+         }
+ 
+         $picture['isLiked'] =$isLiked;
+            
+         $listPictures[]=[
+             'picture'=>$picture,
+            // 'isLiked'=>$isLiked
+         ];
+ 
+     }
+ }
+
+    return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
     }    
 
 
