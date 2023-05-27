@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 class UserController extends AbstractController
@@ -17,7 +18,7 @@ class UserController extends AbstractController
     /**
      * Affiche la liste des utilisateurs
      * 
-     * @Route("/", name="app_back-office_users_browseUser", methods={"GET"})
+     * @Route("/", name="app_back_user_list", methods={"GET"})
      */
 
     public function list(UserRepository $userRepository): Response
@@ -53,7 +54,7 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
-            return $this->redirectToRoute('app_back-office_users_browseUser', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
@@ -61,15 +62,16 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
-
-        /**
-     * @Route("/{id}/delete", name="app_back_user_delete", methods={"GET", "POST"})
+  /**
+     * @Route("/{id}", name="app_back_user_delete", methods={"DELETE"})
      */
-    public function delete(): Response
+    public function delete(User $user, UserRepository $userRepository): Response
     {
-       
-
-
+        $userRepository->remove($user);
+ 
+        $userRepository->flush();
+ 
+        return $this ->redirectToRoute("app_back_user_list");
     }
  
 

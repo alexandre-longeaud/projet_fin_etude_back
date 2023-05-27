@@ -4,8 +4,11 @@
 
 {% block body %}
 
+   
+
 <div class="container">
 	<table class="table table-hover col-6">
+     <a class="btn btn-warning" href="*">Ajouter un membre</a>
 		<thead>
 			<tr>
 				<th scope="col">Utilisateur</th>
@@ -35,7 +38,7 @@
                 <td>
                      <a class="btn btn-success" href="{{ path('app_back_user_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
                     <a class="btn btn-warning" href="{{ path('app_back_user_edit', {'id': user.id}) }}"><i class="bi bi-pencil"></i></a>
-                    <a class="btn btn-warning" href="{{ path('app_back_user_delete', {'id': user.id}) }}"><i class="bi bi-trash3"></i></i></a>
+                    <a class="btn btn-danger" href="{{ path('app_back_user_delete', {'id': user.id}) }}"><i class="bi bi-person-x"></i></a>
 
                 </td>
             </tr>
