@@ -6,7 +6,6 @@
 
 <div class="container">
 	<table class="table table-hover col-6">
-    <a class="btn btn-warning mt-3" href="{{ path('app_back_add') }}">Ajouter <i class="bi bi-person-plus-fill"></i></a>
 		<thead>
 			<tr>
 				<th scope="col">Utilisateur</th>
@@ -34,9 +33,8 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="{{ path('app_back_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
-                    <a class="btn btn-warning" href="{{ path('app_back_edit', {'id': user.id}) }}"><i class="bi bi-pen"></i></a>
-                    <a class="btn btn-danger" href="{{ path('app_back_delete', {'id': user.id}) }}"><i class="bi bi-person-x"></i></a>
+                    <a href="{{ path('app_back_user_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
