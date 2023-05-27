@@ -20,10 +20,12 @@ class UserController extends AbstractController
      * @Route("/", name="app_back-office_users_browseUser", methods={"GET"})
      */
 
-    public function index(UserRepository $userRepository): Response
+    public function list(UserRepository $userRepository): Response
     {
+        $users=$userRepository->getAdminUsers();
+
         return $this->render('user/list.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users
         ]);
     }
 
@@ -58,6 +60,16 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+    }
+
+        /**
+     * @Route("/{id}/delete", name="app_back_user_delete", methods={"GET", "POST"})
+     */
+    public function delete(): Response
+    {
+       
+
+
     }
  
 
