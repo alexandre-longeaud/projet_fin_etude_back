@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User list{% endblock %}
+{% block title %}mAIsterpiece<i class="bi bi-robot"></i>{% endblock %}
 
 {% block body %}
-
+<div class="container col-6">
  {% if 'ROLE_ADMIN' in user.roles %}
                     <h1>Administrateur</h1>
                     {% elseif 'ROLE_USER' in user.roles %}
@@ -55,5 +55,5 @@
 
     <a class="btn btn-warning" href="{{ path('app_back_list', {'id': user.id}) }}"><i class="bi bi-arrow-return-left"></i></a>
      <a class="btn btn-warning" href="{{ path('app_back_edit', {'id': user.id}) }}"><i class="bi bi-pen"></i></a>
-
+</div>
 {% endblock %}

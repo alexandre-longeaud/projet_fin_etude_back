@@ -56,9 +56,9 @@ class UserEditType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             // équivaut à Twig {'attr': {'novalidate': 'novalidate'}}
-            // 'attr' => [
-            //     'novalidate' => 'novalidate',
-            // ]
+            'attr' => [
+                'novalidate' => 'novalidate',
+            ]
         ]);
     }
 }

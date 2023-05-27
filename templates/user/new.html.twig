@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}New User{% endblock %}
-
+{% block title %}mAIsterpiece<i class="bi bi-robot"></i>{% endblock %}
 {% block body %}
-    <h1>Create new User</h1>
+<div class="container col-6">
+<h1>Ajout d'un utilisateur</h1>
+{{ form_start(form) }}
+{{ form_rest(form) }}
 
-    {{ include('back_office/user/_form.html.twig') }}
+<button class="btn btn-warning" type="submit">créer un utilisateur</button>
 
-    <a href="{{ path('app_back_office_user_index') }}">back to list</a>
+{{ form_end(form) }}
+
+</div>
 {% endblock %}
