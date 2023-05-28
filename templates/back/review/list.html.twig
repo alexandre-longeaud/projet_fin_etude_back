@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaires{% endblock %}
+
+{% block body %}
+	
+		<thead>
+			<tr>
+				<th scope="col">Utilisateur</th>
+				<th scope="col">Pseudo</th>
+				<th scope="col">Email</th>
+				<th scope="col">Role</th>
+				<th scope="col">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+        {% for review in reviews %}
+            <tr>
+                <td>{{ review.id }}</td>
+                <td>{{ review.content }}</td>
+                
+           
+               
+                <td>
+                    {# <a class="btn btn-secondary" href="{{ path('app_back_send', {'id': user.id}) }}"><i class="bi bi-envelope"></i></a>
+                    <a class="btn btn-success" href="{{ path('app_back_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-warning" href="{{ path('app_back_edit', {'id': user.id}) }}"><i class="bi bi-pen"></i></a>
+                    <a class="btn btn-danger" href="{{ path('app_back_delete', {'id': user.id}) }}"><i class="bi bi-person-x"></i></a>
+                     #}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

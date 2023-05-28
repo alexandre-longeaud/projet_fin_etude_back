@@ -86,7 +86,7 @@ class UserController extends AbstractController
 
         $this->addFlash(
             'success',
-            $user->getPseudo() ."a bien été crée"
+            $user->getPseudo() ." a bien été crée !"
         );
 
         return $this->redirectToRoute('app_back_list');
@@ -134,8 +134,7 @@ class UserController extends AbstractController
             $entityManager->flush();
     
             $this->addFlash(
-                'success',
-                $user->getPseudo() ."a bien été modifier"
+                'info'," Vos données ont été modifiées !"
             );
     
             return $this->redirectToRoute('app_back_show',["id"=>$user->getId()]);
@@ -156,11 +155,45 @@ class UserController extends AbstractController
 
     public function delete(EntityManagerInterface $entityManager,User $user)
     {
+
+        $this->addFlash(
+            'warning',
+            $user->getPseudo() ." a été supprimer !"
+        );
+
         $entityManager->remove($user);
  
              $entityManager->flush();
  
              return $this ->redirectToRoute("app_back_list");
     }
+
+     /**
+     *Envoyer un mail
+     * 
+     * @Route("/users/{id}", name="app_back_send",requirements={"id"="\d+"})
+     * 
+     */
+
+    public function send(EntityManagerInterface $entityManager,User $user)
+    {
+
+        
+    }
+
+     /**
+     * Rechercher un utilisateur
+     * @Route("/users/search", name="app_back_search")
+     * 
+     */
+    public function search(Request $request,EntityManagerInterface $manager)
+    {
+        $search = $request->query->get('search');
+        $user = $manager->getRepository(User::class)->findByUser($search);
+        return $this->renderForm('user/list.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
  
 }

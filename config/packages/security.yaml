@@ -34,6 +34,7 @@ security:
     
                 login_path: app_security_login
                 check_path: app_security_login
+                default_target_path: app_back_list
             logout:
                 path: app_security_logout
 
