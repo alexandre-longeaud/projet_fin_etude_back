@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Form\UserType;
 use DateTimeImmutable;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  *@Route("/back")
@@ -22,7 +23,7 @@ class UserController extends AbstractController
     /**
      * Affiche la page d'accueil du back office avec la liste des administrateurs
      * 
-     * @Route("/user/list", name="app_back_list", methods={"GET"})
+     * @Route("/", name="app_back_list", methods={"GET"})
      * 
      */
 
