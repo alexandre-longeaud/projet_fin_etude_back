@@ -58,7 +58,7 @@ class UserType extends AbstractType
             'expanded' => true,
         ]);
         // J'utilise une option custom du formulaire pour faire un affichage conditonnel
-        // if($options["custom_option"] !== "edit"){
+        if($options["custom_option"] !== "edit"){
             $builder
                 ->add('password',RepeatedType::class,[
                     "type" => PasswordType::class,
@@ -67,7 +67,7 @@ class UserType extends AbstractType
                     'first_options'  => ['label' => 'Le mot de passe',"attr" => ["placeholder" => "*****"]],
                     'second_options' => ['label' => 'Répétez le mot de passe',"attr" => ["placeholder" => "*****"]],
                 ]);
-            // }
+            }
         ;
     }
 
@@ -75,6 +75,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'custom_option' => "default",
             'attr' => [
                 'novalidate' => 'novalidate',
             ]
