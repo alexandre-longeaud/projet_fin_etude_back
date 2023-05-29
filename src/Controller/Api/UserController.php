@@ -165,7 +165,7 @@ class UserController extends AbstractController
          */
         $user = $this->getUser();
         $user->getLikedPictures();
-        dd($user->getLikedPictures());
+        
 
         
 
