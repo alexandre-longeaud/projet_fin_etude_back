@@ -63,7 +63,7 @@ class Picture
     private $tags;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures",cascade={"persist"})
      * @Groups({"picture","prompt","add-picture"})
      */
     private $ia;
