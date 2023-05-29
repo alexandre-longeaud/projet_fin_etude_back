@@ -37,10 +37,10 @@
           <a class="nav-link active" aria-current="page" href="{{ path('app_back_list') }}">Membre</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Commentaires</a>
+          <a class="nav-link" href="{{path('app_back_review') }}">Commentaires</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Images</a>
+          <a class="nav-link" href="{{path('app_back_picture') }}">Images</a>
         </li>
         
         <li class="nav-item ">
@@ -48,37 +48,6 @@
         </li>
       </ul>
 
-     <span>{{app.user.email}} | 
-									{#! in permet de vérifier si dans le tableau de roles on a une valeur correspondante (équivalent à in_array) #}
-									{% if "ROLE_ADMIN" in app.user.pseudo %}
-										Administrateur
-									{% elseif "ROLE_MANAGER" in app.user.roles %}
-										Manager
-									{% else %}
-										Membre
-									{% endif %}
-									</span>
-									<i class="bi bi-person-square"></i>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a class="dropdown-item" href="#">Profil</a>
-									</li>
-									{% if is_granted("ROLE_MANAGER") %}
-										<li>
-											<a class="dropdown-item" href="{{path("app_back_movie_index")}}">Backoffice</a>
-										</li>
-									{% endif %}
-									
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li>
-										<a class="dropdown-item" href="{{path("app_security_logout")}}">Déconnexion</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
 				
      
       <form class="d-flex" action="{{path("app_back_search")}}">

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}mAIsterpiece<i class="bi bi-robot"></i>{% endblock %}
+
+{% block body %}
+<div class="container col-6">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ reviews.id }}</td>
+            </tr>
+            <tr>
+                <th>content</th>
+                <td>{{ reviews.content }}</td>
+            </tr>
+            <tr>
+                <th>Utilisateur</th>
+                <td>{{ reviews.user.pseudo}}</td>
+            </tr>
+            <tr>
+                <th>avatar</th>
+                <td>{{ reviews.user.avatar }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ reviews.createdAt|date('Y-m-d') }}</td>
+            </tr>
+            <tr>
+                <th>Images</th>
+                <td>
+                   <img src="{{ reviews.picture.fileName }}" alt="Picture {{ reviews.picture.id }}" style="max-width: 200px; max-height: 200px;">
+                </td>            
+                </tr>            
+        </tbody>
+    </table>
+    
+    <a class="btn btn-warning" href="{{ path('app_back_review', {'id': reviews.id}) }}"><i class="bi bi-arrow-return-left"></i></a>
+     <a class="btn btn-danger" href="{{ path('app_back_delete_review', {'id': reviews.id}) }}"><i class="bi bi-person-x"></i></a>
+</div>
+{% endblock %}

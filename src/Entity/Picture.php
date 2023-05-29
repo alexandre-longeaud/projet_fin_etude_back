@@ -51,19 +51,19 @@ class Picture
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture")
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture",cascade={"persist", "remove"})
      * @Groups({"picture","prompt","add-review"})
      */
     private $reviews;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
+     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture",cascade={"persist", "remove"})
      * @Groups({"picture","prompt","add-picture"})
      */
     private $tags;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures",cascade={"persist", "remove"})
      * @Groups({"picture","prompt","add-picture"})
      */
     private $ia;
@@ -80,7 +80,7 @@ class Picture
     private $pictureOfTheWeek;
 
     /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture")
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture",cascade={"persist", "remove"})
      */
     private $likes;
 

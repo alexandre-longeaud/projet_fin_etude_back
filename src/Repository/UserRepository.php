@@ -107,6 +107,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->add($user, true);
     }
 
+     //    /**
+    //     * @return User[] Returns an array of Movie objects by title
+    //     */
+    public function findAllOrderByTitleSearch($search = null): array
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.pseudo', 'ASC')
+            ->where("u.pseudo LIKE :search")
+            ->setParameter("search", "%" . $search . "%")
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

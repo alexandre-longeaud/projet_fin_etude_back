@@ -182,16 +182,16 @@ class UserController extends AbstractController
     }
 
      /**
-     * Rechercher un utilisateur
-     * @Route("/users/search", name="app_back_search")
-     * 
-     */
-    public function search(Request $request,EntityManagerInterface $manager)
+    * Permet de faire une recherche par nom d'utilisateur / find pictures by user name
+    * 
+    * @Route("/search/user", name="app_back_search")
+    */
+    public function searchByUser(Request $request,EntityManagerInterface $manager): Response
     {
-        $search = $request->query->get('search');
-        $user = $manager->getRepository(User::class)->findByUser($search);
-        return $this->renderForm('user/list.html.twig', [
-            'user' => $user,
+        $users = $manager->getRepository(User::class)->findAllOrderByTitleSearch($request->get("search"));
+
+        return $this->render('user/list.html.twig',[
+           "users" => $users
         ]);
     }
 
