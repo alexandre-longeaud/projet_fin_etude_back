@@ -81,8 +81,9 @@ class PictureController extends AbstractController
                     $isLiked=false;
                 }
             }
-
-            $normalizePicture['isLiked'] =$isLiked;
+                $normalizePicture['nombre_like'] = $picture['nombre_like'];
+                $normalizePicture['nombre_review'] = $picture['nombre_review'];
+                $normalizePicture['isLiked'] =$isLiked;
            
             $listPictures[]=$normalizePicture;
 
