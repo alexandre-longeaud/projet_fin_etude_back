@@ -90,7 +90,7 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/week", name="app_api_pictures_browsePictureWeek", methods={"GET"})
      */
-    public function browsePictureWeek(Request $request, PictureRepository $pictureRepository): Response
+    public function browsePictureWeek(Request $request, PictureRepository $pictureRepository, LikeRepository $likeRepository): Response
     {
         $endDate = new DateTime();
         $startDate = (clone $endDate)->modify('-7 days');        
@@ -107,6 +107,23 @@ class PictureController extends AbstractController
         if (!$picture) {
             return $this->json(['error' => 'Picture not found'], 404);
         }
+
+        $user = $this->getUser();
+        $isLiked = false;
+
+        if ($user) {
+            // Vérifiez si l'utilisateur a liké l'image de la semaine
+            $like = $likeRepository->findOneBy([
+                'user' => $user,
+                'picture' => $imageOfTheWeek
+            ]);
+        
+            if ($like) {
+                $isLiked = true;
+            }
+        }
+        
+        $picture['isLiked'] = $isLiked;       
     
         return $this->json($picture, 200, [], ['groups' => ['picture']]);
     }
@@ -116,12 +133,27 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/{id}", name="app_api_pictures_read", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function read($id, PictureRepository $pictureRepository): JsonResponse
+    public function read($id, PictureRepository $pictureRepository, LikeRepository $likeRepository): JsonResponse
     {
+        $user = $this->getUser();        
         $picture = $pictureRepository->findPicture($id);
 
         if ($picture === null){return $this->json("image inexistant",Response::HTTP_NOT_FOUND);}
+        $isLiked = false;
 
+        if ($user) {
+            // Vérifiez si l'utilisateur a liké cette image
+            $like = $likeRepository->findOneBy([
+                'user' => $user,
+                'picture' => $picture
+            ]);
+        
+            if ($like) {
+                $isLiked = true;
+            }
+        }
+        
+        $picture['isLiked'] = $isLiked;        
         return $this->json($picture, 200, [], ["groups"=>["picture"]]);
     }  
       /**********************************************************************************************************************************************************************************************************
