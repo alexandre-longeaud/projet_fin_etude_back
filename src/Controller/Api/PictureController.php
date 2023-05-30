@@ -197,6 +197,8 @@ class PictureController extends AbstractController
         $isLiked=false;
     }
 }
+        $normalizePicture['nombre_like'] = $picture['nombre_like'];
+        $normalizePicture['nombre_review'] = $picture['nombre_review'];
         $picture['isLiked'] =$isLiked;
            
         $listPictures[]=[
@@ -242,8 +244,10 @@ class PictureController extends AbstractController
         $isLiked=false;
     }
 }
-    
-            $picture['isLiked'] =$isLiked;
+
+        $normalizePicture['nombre_like'] = $picture['nombre_like'];
+        $normalizePicture['nombre_review'] = $picture['nombre_review'];
+        $picture['isLiked'] =$isLiked;
                
             $listPictures[]=[
                 'picture'=>$picture,
@@ -290,6 +294,9 @@ class PictureController extends AbstractController
     }
 }
  
+         $normalizePicture['nombre_like'] = $picture['nombre_like'];
+         $normalizePicture['nombre_review'] = $picture['nombre_review'];
+
          $picture['isLiked'] =$isLiked;
             
          $listPictures[]=[
