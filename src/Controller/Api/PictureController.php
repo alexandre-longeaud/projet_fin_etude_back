@@ -58,7 +58,7 @@ class PictureController extends AbstractController
         foreach ($picturesAtHome as $picture) {
             //On détermine si une image liké en metant une variable par défault à true
             $isLiked=true;
-            //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
+            //Si un utilisateur n'est pas connecté alors on ne fournit pas l'info est on met $isLiked à false pour tout!!
             if($user === null){
                 $isLiked=false;
             }else{
