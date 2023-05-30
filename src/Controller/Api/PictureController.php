@@ -172,7 +172,7 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/filtre/liked", name="app_api_picture_browseMostLiked", methods={"GET"})
      */
-    public function browseMostLiked(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
+    public function browseMostLiked(PictureRepository $pictureRepository,LikeRepository $likeRepository,SerializerInterface $serializer): JsonResponse
     {
         $user = $this->getUser();
         $listPictures=[];
@@ -180,6 +180,12 @@ class PictureController extends AbstractController
 
          //Pour chaque image, on boucle sur chaque image 
     foreach ($picturesLiked as $picture) {
+
+    /**
+    * @var Serializer $serializer
+    */
+    $normalizePicture= $serializer->normalize($picture,'array',["groups"=>["picture"]]);
+    $normalizePicture=$normalizePicture['0'];
     //On détermine si une image liké en metant une variable par défault à true
     $isLiked=true;
     //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
@@ -197,17 +203,16 @@ class PictureController extends AbstractController
         $isLiked=false;
     }
 }
-        $picture['isLiked'] =$isLiked;
+      
+$normalizePicture['isLiked'] =$isLiked;
            
-        $listPictures[]=[
-            'picture'=>$picture,
-           // 'isLiked'=>$isLiked
-        ];
+$listPictures[]=$normalizePicture;
+
 
   
 }
 
-        return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
+        return $this->json($listPictures);
     }
 
       /**
@@ -215,7 +220,7 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/filtre/clicked", name="app_api_picture_browseMostClicked", methods={"GET"})
      */
-    public function browseMostClicked(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
+    public function browseMostClicked(PictureRepository $pictureRepository,LikeRepository $likeRepository,SerializerInterface $serializer): JsonResponse
     {
 
         $user = $this->getUser();
@@ -223,8 +228,16 @@ class PictureController extends AbstractController
 
         $picturesClicked = $pictureRepository->findPicturerByNbClic();
 
+        
+
                //Pour chaque image, on boucle sur chaque image 
     foreach ($picturesClicked as $picture) {
+
+         /**
+             * @var Serializer $serializer
+             */
+            $normalizePicture= $serializer->normalize($picture,'array',["groups"=>["picture"]]);
+            $normalizePicture=$normalizePicture['0'];
         //On détermine si une image liké en metant une variable par défault à true
         $isLiked=true;
         //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
@@ -243,17 +256,14 @@ class PictureController extends AbstractController
     }
 }
     
-            $picture['isLiked'] =$isLiked;
-               
-            $listPictures[]=[
-                'picture'=>$picture,
-               // 'isLiked'=>$isLiked
-            ];
+$normalizePicture['isLiked'] =$isLiked;
+           
+$listPictures[]=$normalizePicture;
     
         
     }
 
-        return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
+        return $this->json($listPictures);
     }
 
      /**
@@ -261,7 +271,7 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/filtre/reviewed", name="app_api_pictures_browseMostReviewed", methods={"GET"})
      */
-    public function browseMostReviewed(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
+    public function browseMostReviewed(PictureRepository $pictureRepository,LikeRepository $likeRepository,SerializerInterface $serializer): JsonResponse
     {
 
         $user = $this->getUser();
@@ -272,6 +282,13 @@ class PictureController extends AbstractController
 
     //Pour chaque image, on boucle sur chaque image 
     foreach ( $pictureReviewed as $picture) {
+
+    
+            /**
+             * @var Serializer $serializer
+             */
+            $normalizePicture= $serializer->normalize($picture,'array',["groups"=>["picture"]]);
+            $normalizePicture=$normalizePicture['0'];
      //On détermine si une image liké en metant une variable par défault à true
      $isLiked=true;
      //Si un utilisateur n'est pas connecté alors on ne fournit pas l'indo est on met $isLiked à false pour tout!!
@@ -290,17 +307,13 @@ class PictureController extends AbstractController
     }
 }
  
-         $picture['isLiked'] =$isLiked;
-            
-         $listPictures[]=[
-             'picture'=>$picture,
-            // 'isLiked'=>$isLiked
-         ];
- 
+$normalizePicture['isLiked'] =$isLiked;
+           
+$listPictures[]=$normalizePicture;
      
  }
 
-    return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
+    return $this->json($listPictures);
     }    
 
 
