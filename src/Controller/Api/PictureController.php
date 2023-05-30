@@ -19,6 +19,7 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class PictureController extends AbstractController
      * @Route("/pictures", name="app_api_pictures_browseByCreatedAt", methods={"GET"})
      * 
      */
-    public function browseByCreatedAt(PictureRepository $pictureRepository,LikeRepository $likeRepository): JsonResponse
+    public function browseByCreatedAt(PictureRepository $pictureRepository,LikeRepository $likeRepository,SerializerInterface $serializer): JsonResponse
     {
         $user = $this->getUser();
         $listPictures=[];
@@ -56,6 +57,13 @@ class PictureController extends AbstractController
         $picturesAtHome = $pictureRepository->findPictureOrderByDate();
         //Pour chaque image, on boucle sur chaque image 
         foreach ($picturesAtHome as $picture) {
+
+            /**
+             * @var Serializer $serializer
+             */
+            $normalizePicture= $serializer->normalize($picture,'array',["groups"=>["picture"]]);
+            $normalizePicture=$normalizePicture['0'];
+         
             //On détermine si une image liké en metant une variable par défault à true
             $isLiked=true;
             //Si un utilisateur n'est pas connecté alors on ne fournit pas l'info est on met $isLiked à false pour tout!!
@@ -74,15 +82,13 @@ class PictureController extends AbstractController
                 }
             }
 
-            $picture['isLiked'] =$isLiked;
+            $normalizePicture['isLiked'] =$isLiked;
            
-            $listPictures[]=[
-                'picture'=>$picture,
-               // 'isLiked'=>$isLiked
-            ];
+            $listPictures[]=$normalizePicture;
 
         }
-        return $this->json($listPictures, 200, [],["groups"=>["picture"]]);
+        
+        return $this->json($listPictures);
     }
 
     /**
