@@ -25,7 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read:User:item"})
+     * @Groups({"read:User:item","picture"})
      */
     private $id;
 
