@@ -133,12 +133,27 @@ class PictureController extends AbstractController
      * 
      * @Route("/pictures/{id}", name="app_api_pictures_read", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function read($id, PictureRepository $pictureRepository): JsonResponse
+    public function read($id, PictureRepository $pictureRepository, LikeRepository $likeRepository): JsonResponse
     {
+        $user = $this->getUser();        
         $picture = $pictureRepository->findPicture($id);
 
         if ($picture === null){return $this->json("image inexistant",Response::HTTP_NOT_FOUND);}
+        $isLiked = false;
 
+        if ($user) {
+            // Vérifiez si l'utilisateur a liké cette image
+            $like = $likeRepository->findOneBy([
+                'user' => $user,
+                'picture' => $picture
+            ]);
+        
+            if ($like) {
+                $isLiked = true;
+            }
+        }
+        
+        $picture['isLiked'] = $isLiked;        
         return $this->json($picture, 200, [], ["groups"=>["picture"]]);
     }  
       /**********************************************************************************************************************************************************************************************************
