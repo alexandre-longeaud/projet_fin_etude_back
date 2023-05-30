@@ -140,7 +140,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_back_show',["id"=>$user->getId()]);
     
         }
-            return $this->renderForm('user/new.html.twig', [
+            return $this->renderForm('user/edit.html.twig', [
                 'form' => $form,
             ]);
        
