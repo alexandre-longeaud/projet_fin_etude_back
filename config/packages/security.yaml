@@ -30,6 +30,14 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            form_login:
+    
+                login_path: app_security_login
+                check_path: app_security_login
+                default_target_path: app_back_list
+            logout:
+                path: app_security_logout
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -40,7 +48,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/back, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
     role_hierarchy:
     # L'admin a les droits du manager
