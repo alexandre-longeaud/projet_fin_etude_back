@@ -158,7 +158,7 @@ class UserController extends AbstractController
 
         $this->addFlash(
             'warning',
-            $user->getPseudo() ." a été supprimer !"
+            $user->getPseudo() ." a été supprimé !"
         );
 
         $entityManager->remove($user);
