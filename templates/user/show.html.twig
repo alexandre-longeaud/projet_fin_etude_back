@@ -1,9 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User list{% endblock %}
+{% block title %}mAIsterpiece<i class="bi bi-robot"></i>{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+<div class="container col-6">
+ {% if 'ROLE_ADMIN' in user.roles %}
+                    <h1>Administrateur</h1>
+                    {% elseif 'ROLE_USER' in user.roles %}
+                    <h1>Utilisateur</h1>
+                    {% endif %}
+  
+  
+{% for message in app.flashes('info') %}
+ <div class="alert alert-warning col-4 mt-4" role="alert">
+   {{ message }}
+</div>       
+{% endfor %}
 
     <table class="table">
         <tbody>
@@ -47,8 +59,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_back-office_users_browseUser') }}">back to list</a>
-
-    <a href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
-
+    <a class="btn btn-warning mb-4" href="{{ path('app_back_list', {'id': user.id}) }}"><i class="bi bi-arrow-return-left"></i></a>
+     <a class="btn btn-warning mb-4" href="{{ path('app_back_edit', {'id': user.id}) }}"><i class="bi bi-pen"></i></a>
+</div>
 {% endblock %}

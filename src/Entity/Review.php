@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use DateTimeImmutable;
 
 /**
  * @ORM\Entity(repositoryClass=ReviewRepository::class)
@@ -50,6 +51,13 @@ class Review
      * @Groups({"picture"})
      */
     private $user;
+
+    public function __toString()
+    {
+        return $this->getContent();
+        
+    }
+
 
     public function getId(): ?int
     {
