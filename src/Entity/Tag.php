@@ -17,13 +17,13 @@ class Tag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"picture","add-picture"})
+     * @Groups({"add-picture"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"picture","add-picture"})
+     * @Groups({"add-picture"})
      */
     private $name;
 
