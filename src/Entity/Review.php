@@ -48,7 +48,7 @@ class Review
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
-     * @Groups({"picture"})
+     * 
      */
     private $user;
 
