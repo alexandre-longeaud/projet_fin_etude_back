@@ -99,6 +99,11 @@ class Picture
         $this->likes = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->prompt;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

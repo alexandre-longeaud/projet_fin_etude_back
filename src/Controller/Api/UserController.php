@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 
@@ -30,7 +31,6 @@ class UserController extends AbstractController
      *Affiche le compte d'un utilisateur / Display user account
      *  
      * @Route("/users/{id}/account", name="app_users_browseAccountUser",requirements={"id"="\d+"}, methods={"GET"})
-     * IsGranted("ROLE_USER")
      */
     public function browseAccountUser($id, UserRepository $userRepository): JsonResponse
     {
@@ -44,7 +44,7 @@ class UserController extends AbstractController
      * Permet de modifier le profil d'un utilisateur
      * 
      * @Route("/users/{id}/account/profil", name="app_users_editProfilUser",requirements={"id"="\d+"}, methods={"PUT"})
-     * IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_USER")
      */
     public function editProfilUser(Request $request, User $user, UserPasswordHasherInterface $passwordHasher,EntityManagerInterface $manager): JsonResponse
     {
@@ -111,7 +111,7 @@ class UserController extends AbstractController
      *
      * @Route("/users/sign-up", name="app_users_signUp", methods={"POST"})
      */
-    public function signUp(Request $request, SerializerInterface $serializer,UserPasswordHasherInterface $passwordHasher,EntityManagerInterface $manager){
+    public function signUp(Request $request, SerializerInterface $serializer,UserPasswordHasherInterface $passwordHasher,EntityManagerInterface $manager,ValidatorInterface $validator){
 
         $data = $request->getContent();
         $user = $serializer->deserialize($data, User::class, 'json');
@@ -128,6 +128,21 @@ class UserController extends AbstractController
         $user->setPassword($hashedPassword);
 
         $user->setCreatedAt(new \DateTimeImmutable());
+              // Etant donné qu'on a pas à dispo la fonction isValid des formulaires symfo, il faut qu'on vérifie manuellement la validité de l'entité
+              $errors = $validator->validate($user);
+              // Si mon tableau d'erreur est supérieur à 0 le formulaire est invalide
+              if(count($errors) > 0){
+                  // Je crée un tableau vide, je stockerai toutes les erreurs dedans
+                  $dataErrors = [];
+      
+                  // Je boucle sur les erreurs
+                  foreach($errors as $error){
+                      // Je crée dans mon tableau un index par champs et je liste toutes les erreurs du champs en question dans un sous tableau
+                      $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
+                  }
+                  // L'entité n'étant pas traitable à cause de données erronnés, je renvois un code 422
+                  return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
+              }
         
         $manager->persist($user);
         $manager->flush();
@@ -144,7 +159,13 @@ class UserController extends AbstractController
      */
     public function info(): JsonResponse
     {
+        /**
+         * 
+         * @var User $user
+         */
         $user = $this->getUser();
+        $user->getLikedPictures();
+        
 
         
 
