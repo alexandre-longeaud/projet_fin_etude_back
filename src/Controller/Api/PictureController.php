@@ -100,7 +100,7 @@ class PictureController extends AbstractController
     public function browsePictureWeek(Request $request, PictureRepository $pictureRepository, LikeRepository $likeRepository): Response
     {
         $endDate = new DateTime();
-        $startDate = (clone $endDate)->modify('-7 days');        
+        $startDate = (clone $endDate)->modify('-1 days');        
         // Utilisez le service de sélection de l'image de la semaine pour obtenir l'image sélectionnée
         $imageOfTheWeek = $this->imageSelectionService->selectImageOfTheWeek($startDate, $endDate);
     
