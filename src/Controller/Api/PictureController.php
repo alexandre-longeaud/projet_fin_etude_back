@@ -341,7 +341,7 @@ class PictureController extends AbstractController
 
         //Vérifier si l'utilisateur est connecté
             if (!$user) {
-          return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+          return new JsonResponse(['message' => 'Il faut être connecté pour ajouter un commentaire'], 401);
         }
 
     //Je récupère les données avec l'object Request et sa méthode getContent()
@@ -384,8 +384,8 @@ class PictureController extends AbstractController
     }
 }
 
-      /**
-     * Permet à un utilisateur de mettre un like à une image
+    /**
+     * Permet à un utilisateur de mettre un like ou dislike
      * 
      * @Route("/pictures/{id}/like", name="app_api_pictures_addLike", requirements={"id"="\d+"}, methods={"POST"})
      * @IsGranted("ROLE_USER")
@@ -438,7 +438,7 @@ class PictureController extends AbstractController
                                                                                 ACTION COMPTE UTILISATEUR/ ACTION FROM USER ACCOUNT                                                                        
      **********************************************************************************************************************************************************************************************************/
 
- /**
+    /**
      * Permet à un utilisateur d'ajouter une image
      * 
      * @Route("/pictures/add", name="app_api_pictures_addPicture", methods={"POST"})
@@ -452,7 +452,7 @@ class PictureController extends AbstractController
 
         //Vérifier si l'utilisateur est connecté
         if (!$user) {
-            return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+            return new JsonResponse(['message' => 'Il faut ce connecter pour ajouter une image'], 401);
           }
 
         $fichier=($request->files->get("file"));
@@ -516,7 +516,7 @@ class PictureController extends AbstractController
 
         //Vérifier si l'utilisateur est connecté
             if (!$user) {
-          return new JsonResponse(['message' => 'Il faut ce connecter pour liker'], 401);
+          return new JsonResponse(['message' => 'Il faut être connecté pour supprimer une image'], 401);
         }
 
         // Supprimer les commentaires associés à l'image

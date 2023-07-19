@@ -281,7 +281,7 @@ class Picture
     }
 
     /**
-     * Check if the picture is liked by the given user.
+     * Vérifie si un utilisateur à mit un like.
      *
      * @param User $user
      * @return bool
