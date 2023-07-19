@@ -534,7 +534,7 @@ class PictureController extends AbstractController
         $entityManager->flush();
 
 
-        return new Response('L\'image et les commentaires associés ont été supprimés avec succès.', Response::HTTP_OK);
+        return new Response('L\'image et les commentaires associés ont été supprimés avec succès.', Response::HTTP_OK,[],["groups"=>["delete"]]);
     }
 
     

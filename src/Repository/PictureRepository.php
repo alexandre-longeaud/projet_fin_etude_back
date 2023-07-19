@@ -151,13 +151,14 @@ class PictureRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('picture');
 
         $pictureData = $queryBuilder
-            ->select('picture.id, picture.fileName, picture.prompt, picture.nbClick, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar, ia.id AS ia_id, ia.name AS ia_name, ia.link AS ia_link')
+            ->select('picture.id, picture.fileName, picture.prompt, picture.nbClick, COUNT(l.id) AS nombre_like, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar, ia.id AS ia_id, ia.name AS ia_name, ia.link AS ia_link, tags.id AS tag_id, tags.name AS tag_name')
             ->leftJoin('picture.likes', 'l')
             ->leftJoin('picture.user', 'user')
             ->leftJoin('picture.ia', 'ia')
+            ->leftJoin('picture.tags', 'tags')
             ->andWhere('picture.id = :id')
             ->setParameter('id', $id)
-            ->groupBy('picture.id, user.id, user.pseudo, user.avatar, ia.id, ia.name, ia.link')
+            ->groupBy('picture.id, user.id, user.pseudo, user.avatar, ia.id, ia.name, ia.link,tags.id, tags.name')
             ->getQuery()
             ->getOneOrNullResult(Query::HYDRATE_ARRAY);
     
@@ -209,7 +210,7 @@ class PictureRepository extends ServiceEntityRepository
     public function findByTag(string $search): array
     {
         $queryBuilder = $this->createQueryBuilder('picture')
-        ->select('picture, picture.id AS picture_id, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar,picture.fileName')        
+        ->select('picture, picture.id AS picture_id, COUNT(l.id) AS nombre_like, COUNT(review.id) AS nombre_review, user.id AS user_id, user.pseudo AS user_pseudo, user.avatar AS user_avatar,picture.fileName, tag.id AS tag_id, tag.name AS tag_name')        
         ->leftJoin('picture.likes', 'l')
         ->leftJoin('picture.reviews', 'review')
         ->leftJoin('picture.user', 'user')
