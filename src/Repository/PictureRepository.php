@@ -40,7 +40,7 @@ class PictureRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * retourne la list des 30 images les plus récent
+    //     * retourne la liste des 30 images les plus récentes
     //     */
     public function findPictureOrderByDate(): array
     {
@@ -51,6 +51,44 @@ class PictureRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+   /**
+    * retourne les 30 images les plus likées 
+    */
+
+    public function findPictureByLikes(): array
+    {
+        return $this->createQueryBuilder('picture')
+            ->select('picture, COUNT(l.id) AS nombre_like')
+            ->leftJoin('picture.likes', 'l')
+            ->groupBy('picture.id')
+            ->orderBy('nombre_like', 'DESC')
+            ->setMaxResults(30)
+            ->getQuery()
+            ->getResult();
+    }
+   /**
+    * retourne les 30 images les plus vues 
+    */
+
+    public function findPicturerByNbClic()
+    {
+        return $this->createQueryBuilder('picture')
+            ->orderBy('picture.nbClick', 'DESC')
+            ->setMaxResults(30)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByPictureMostReview()
+    {
+        return $this->createQueryBuilder('picture')
+        ->select('picture, COUNT(r.id) AS nombre_review')
+        ->leftJoin('picture.reviews', 'r')
+        ->groupBy('picture.id')
+        ->orderBy('nombre_review', 'DESC')
+        ->setMaxResults(30)
+        ->getQuery()
+        ->getResult();   }
 //    /**
 //     * @return Picture[] Returns an array of Picture objects
 //     */
