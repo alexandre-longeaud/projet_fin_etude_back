@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+	<table class="table table-hover col-6">
+		<thead>
+			<tr>
+				<th scope="col">Utilisateur</th>
+				<th scope="col">Contenu</th>
+				<th scope="col">Date</th>
+				<th scope="col">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+
+           
+                <tr>
+                    <th scope="row"></th>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <a href=""><i class="bi bi-eye btn btn-primary rounded mx-1"></i></a>
+                        <a href=""><i class="bi bi-pencil btn btn-warning rounded mx-1"></i></a>
+                        <a onclick="return confirm('Confirmer la suppression')" href=""><i class="bi bi-trash btn btn-danger rounded mx-1"></i></a>
+                    </td>
+                </tr>
+            
+		</tbody>
+	</table>
+
+</div>
+{% endblock %}
