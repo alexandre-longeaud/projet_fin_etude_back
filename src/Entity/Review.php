@@ -36,6 +36,7 @@ class Review
 
     /**
      * @ORM\ManyToOne(targetEntity=Picture::class, inversedBy="reviews")
+     * @ORM\JoinColumn(name="picture_id", referencedColumnName="id")
      */
     private $picture;
 
@@ -43,8 +44,6 @@ class Review
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
      */
     private $user;
-
-
 
     public function getId(): ?int
     {

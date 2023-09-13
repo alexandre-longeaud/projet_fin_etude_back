@@ -2,21 +2,148 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Provider\PictureProvider;
 use App\Entity\Ia;
+use App\Entity\Like;
 use App\Entity\Picture;
+use App\Entity\PictureOfTheWeek;
 use App\Entity\Review;
+use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\DBAL\Connection;
+
+
 
 class AppFixtures extends Fixture
 {
+    private $connection;
+
+
+    /**
+    * Constructor
+    */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+
+    /**
+     * Permet de TRUNCATE les tables et de remettre les AI à 1
+     */
+    private function truncate()
+    {
+        // Désactivation la vérification des contraintes FK
+        $this->connection->executeQuery('SET foreign_key_checks = 0');
+        // On tronque
+        $this->connection->executeQuery('TRUNCATE TABLE picture');
+        $this->connection->executeQuery('TRUNCATE TABLE ia');
+        $this->connection->executeQuery('TRUNCATE TABLE review');
+        $this->connection->executeQuery('TRUNCATE TABLE tag');
+        $this->connection->executeQuery('TRUNCATE TABLE tag_picture');
+        $this->connection->executeQuery('TRUNCATE TABLE user');
+        $this->connection->executeQuery('TRUNCATE TABLE picture_of_the_week');
+    }
+
+
     public function load(ObjectManager $manager): void
     {
+
+        // on tronque les tables
+        $this->truncate();
+
+
+
+
+
+                // liste de Users
+
+            // administrateurs
+
+            $userBen = new User();
+            $userBen->setPseudo('Benoit-R');
+            $userBen->setEmail('benoit@benoit.com');
+            $userBen->setRoles(['ROLE_ADMIN']);
+            $userBen->setPassword('$2y$13$QzAdagb9dwOGrkFaVQYYbOzuZypCHfE2bRnx/QTuJqInMrM1JLmaK');
+            $userBen->setBio('Benoît Rolet, product owner et administrateur de Maisterpiece.com');
+            $userBen->setAvatar('https://ca.slack-edge.com/T051G8W6UAC-U050V5MTX9Q-8c2f44989391-512');
+            $userBen->setCreatedAt(new DateTime('now'));
+            $manager->persist($userBen);
+    
+    
+            $userNico = new User();
+            $userNico->setPseudo('Nico-C');
+            $userNico->setEmail('nico@nico.com');
+            $userNico->setRoles(['ROLE_ADMIN']);
+            $userNico->setPassword('$2y$13$pDd02nUT43D6AGyln8D/0eQQdxdSXBMYeOiRMOz2Va.sVYwMssv7u');
+            $userNico->setBio('Nicolas Caron, lead developer frontend et administrateur de Maisterpiece.com');
+            $userNico->setAvatar('https://ca.slack-edge.com/T051G8W6UAC-U050U6DK5V1-3427f3bfa239-512');
+            $userNico->setCreatedAt(new DateTime('now'));
+            $manager->persist($userNico);
+    
+    
+            $userAurelie = new User();
+            $userAurelie->setPseudo('Aurelie-S');
+            $userAurelie->setEmail('aurelie@aurelie.com');
+            $userAurelie->setRoles(['ROLE_ADMIN']);
+            $userAurelie->setPassword('$2y$13$QGA6t.or2IgD6pkdICiSTOorI0bIZUGu1yjntOKuQaCZHlBtzO3b6');
+            $userAurelie->setBio('Aurelie Simonneau, Scrum Master et administrateur de Maisterpiece.com');
+            $userAurelie->setAvatar('https://ca.slack-edge.com/T051G8W6UAC-U050MEYMPJA-d4f976fc0f58-512');
+            $userAurelie->setCreatedAt(new DateTime('now'));
+            $manager->persist($userAurelie);
+            
+    
+            $userAlex = new User();
+            $userAlex->setPseudo('Alex-L');
+            $userAlex->setEmail('alex@alex.com');
+            $userAlex->setRoles(['ROLE_ADMIN']);
+            $userAlex->setPassword('$2y$13$UyNGRncDul0e2mObEzj7gu.4GvtzfEgVWbQj2N.hefBn5pNi3ITE6');
+            $userAlex->setBio('Alexandre Longeaud, Git Master et administrateur de Maisterpiece.com');
+            $userAlex->setAvatar('https://ca.slack-edge.com/T051G8W6UAC-U050ZEZEE1G-g00bdeff674d-512');
+            $userAlex->setCreatedAt(new DateTime('now'));
+            $manager->persist($userAlex);
+    
+    
+            $userChris = new User();
+            $userChris->setPseudo('Chris-C');
+            $userChris->setEmail('christophe@christophe.com');
+            $userChris->setRoles(['ROLE_ADMIN']);
+            $userChris->setPassword('$2y$13$V2rUi5jWZj9Itzi2OcQB3uh6y/D6XXT5nKLvZjybAieihfUNoEYXi');
+            $userChris->setBio('Christophe Cumbo, lead developer backend et administrateur de Maisterpiece.com');
+            $userChris->setAvatar('https://ca.slack-edge.com/T051G8W6UAC-U051F78D99P-7c135f7c743f-512');
+            $userChris->setCreatedAt(new DateTime('now'));
+            $manager->persist($userChris);
+    
+    
+                //utilisateurs membre
+    
+            $userMembre = new User();
+            $userMembre->setPseudo('User-1');
+            $userMembre->setEmail('user1@user1.com');
+            $userMembre->setRoles(['ROLE_USER']);
+            $userMembre->setPassword('$2y$13$1l2Gv/9G5caLbjuOIz5VCeAYDhZHMM6yFoDFlny0ys2wynA2teh2m');
+            $userMembre->setBio('User1, inscrit sur Maisterpiece et membre actif sur le site');
+            $userMembre->setAvatar('https://www.zupimages.net/up/23/18/lmmr.jpg');
+            $userMembre->setCreatedAt(new DateTime('now'));
+            $manager->persist($userMembre);
+    
+
+            $userMembre2 = new User();
+            $userMembre2->setPseudo('User-2');
+            $userMembre2->setEmail('user2@user2.com');
+            $userMembre2->setRoles(['ROLE_USER']);
+            $userMembre2->setPassword('$2y$13$42vU2RXvoHbRaZZ/InyT1.lvkCIF0GAu8BTvQTm6/tj9E4aLsfgtu');
+            $userMembre2->setBio('User2, inscrit sur Maisterpiece et membre actif sur le site');
+            $userMembre2->setAvatar('https://www.zupimages.net/up/23/18/wasp.jpg');
+            $userMembre2->setCreatedAt(new DateTime('now'));
+            $manager->persist($userMembre2);
+            
         // * je constitue une liste des IA
         $allIa = [];
-        for ($i=0; $i < 5; $i++){
-           // 1. créer l'objet
+        for ($i=1; $i < 6; $i++) {
+            // 1. créer l'objet
             $newIa = new Ia();
             // 2. on met à jour les propriétés
             $newIa->setName("IA #" . $i);
@@ -30,31 +157,88 @@ class AppFixtures extends Fixture
 
         }
         // * je constitue une liste de 30 images
-        for ($i=0; $i < 31; $i++){
+        $allPictures = [];
+        $allUsers = [$userBen, $userNico, $userAurelie, $userAlex, $userChris, $userMembre, $userMembre2];
+        for ($i=0; $i < 31; $i++) {
             // 1. créer un objet Picture
             $newPicture = new Picture();
+           
 
             // 2. remplire les propriétés de mon nouvel objet
             $newPicture->setPrompt("mon super prompt #" . $i);
-            $newPicture->setUrl("https://www.zupimages.net/up/23/18/8ptc.jpg"); 
-            $newPicture->setNbClick(mt_rand(0,99));
+            $pictureIndex = new PictureProvider();
+            
+            $newPicture->setUrl($pictureIndex->pictureUrl());
+            $newPicture->setNbClick(mt_rand(0, 99));
             $newPicture->setCreatedAt(new DateTime('now'));
+            $randomUserIndex = array_rand($allUsers);
+            $randomUser = $allUsers[$randomUserIndex];        
+            $newPicture->setUser($randomUser);
 
             $randomIndexIa = mt_rand(0, count($allIa)-1);
             $randomIa = $allIa[$randomIndexIa];
 
             $newPicture->setIa($randomIa);
-
             $newReview = new Review();
 
-            $newPicture->addReview($newReview->setContent('super image'));
-        
+            $newReview->setContent("super image #" . $i);
+            $newReview->setUser($randomUser);
 
+            $newReview->setCreatedAt(new DateTime('now'));
+            $newPicture->addReview($newReview);
+            $manager->persist($newReview);
             $manager->persist($newPicture);
+            $allPictures[] = $newPicture;
+        }
+        // Parcourir la liste des utilisateurs pour leur faire aimer et commenter les images
 
+
+
+    foreach ($allUsers as $user) {
+        // Liker des images aléatoires
+        $likedPictures = array_rand($allPictures, mt_rand(1, count($allPictures)));
+
+        if (!is_array($likedPictures)) {
+            $likedPictures = [$likedPictures];
         }
 
+        foreach ($likedPictures as $index) {
+            $picture = $allPictures[$index];
         
+            $newLike = new Like();
+            $newLike->setUser($user);
+            $newLike->setPicture($picture);
+        
+            $picture->addLike($newLike);
+        
+            $manager->persist($newLike);
+            $manager->persist($picture);
+        }
+    }
+
+
+        $newPictureOfTheWeek = new Picture();
+        $newPictureOfTheWeek->setPrompt("mon super prompt!");
+        $newPictureOfTheWeek->setUrl("https://www.zupimages.net/up/23/18/qs7v.jpg");
+        $newPictureOfTheWeek->setNbClick(mt_rand(20, 99));
+        $newPictureOfTheWeek->setCreatedAt(new DateTime('now'));
+        $newPictureOfTheWeek->setUser($userMembre2);
+        $pictureOfTheWeek = new PictureOfTheWeek();
+        $pictureOfTheWeek->addPicture($newPictureOfTheWeek);
+        $pictureOfTheWeek->setTimeStampWeek(new DateTime('now'));
+        $manager->persist($newPictureOfTheWeek);
+        $manager->persist($pictureOfTheWeek);
+    
+
+
+
+
+            
+
+
+
+
+
 
         $manager->flush();
     }

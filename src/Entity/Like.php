@@ -5,11 +5,12 @@ namespace App\Entity;
 use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass=LikeRepository::class)
  * @ORM\Table(name="`like`")
  */
-class Like
+class Like 
 {
     /**
      * @ORM\Id
@@ -56,4 +57,6 @@ class Like
 
         return $this;
     }
+
+  
 }
