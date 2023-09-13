@@ -6,36 +6,35 @@ use App\Repository\PictureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  */
-class Picture
+class Picture 
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt","delete"})
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"picture"})
-     */
-    private $url;
 
     /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"picture"})
+     * @Groups({"picture","prompt","add-picture"})
+     * @Assert\NotBlank
      */
     private $prompt;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Groups({"picture"})
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"picture","prompt"})
      */
     private $nbClick;
 
@@ -47,30 +46,31 @@ class Picture
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"picture"})
+     * @Groups({"picture","delete"})
      */
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture")
-     * @Groups({"picture"})
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="picture",cascade={"persist", "remove"})
+     * @Groups({"picture","prompt","add-review"})
      */
     private $reviews;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture")
-     * @Groups({"picture"})
+     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="picture",cascade={"persist", "remove"})
+     * @Groups({"picture","prompt","add-picture"})
      */
     private $tags;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures")
-     * @Groups({"picture"})
+     * @ORM\ManyToOne(targetEntity=Ia::class, inversedBy="pictures",cascade={"persist", "remove"})
+     * @Groups({"picture","prompt","add-picture"})
      */
     private $ia;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="picture")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pictures")
+     * @Groups({"picture"})
      */
     private $user;
 
@@ -80,14 +80,16 @@ class Picture
     private $pictureOfTheWeek;
 
     /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture")
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="picture",cascade={"persist", "remove"})
      */
     private $likes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="pictures")
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"picture"})
      */
-    private $review;
+    private $fileName;
+
 
 
     public function __construct()
@@ -95,25 +97,16 @@ class Picture
         $this->reviews = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->review = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->prompt;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
     }
 
     public function getPrompt(): ?string
@@ -133,7 +126,7 @@ class Picture
         return $this->nbClick;
     }
 
-    public function setNbClick(int $nbClick): self
+    public function setNbClick(?int $nbClick): self
     {
         $this->nbClick = $nbClick;
 
@@ -157,7 +150,7 @@ class Picture
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -288,12 +281,43 @@ class Picture
     }
 
     /**
-     * @return Collection<int, Review>
+     * Check if the picture is liked by the given user.
+     *
+     * @param User $user
+     * @return bool
      */
-    public function getReview(): Collection
+    public function isLikedByUser(User $user): bool
     {
-        return $this->review;
+        foreach ($this->likes as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
+    public function findLikeByUser(User $user): ?Like
+{
+    foreach ($this->likes as $like) {
+        if ($like->getUser() === $user) {
+            return $like;
+        }
+    }
+
+    return null;
+}
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName(string $fileName): self
+    {
+        $this->fileName = $fileName;
+
+        return $this;
+    }
 
 }

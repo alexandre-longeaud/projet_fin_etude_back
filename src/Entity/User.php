@@ -3,44 +3,71 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+
+
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read:User:item","picture"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"picture","user","read:User:item","sign-up","update-account"})
+     * @Assert\NotBlank
+     * @Assert\Email
      */
-    private $pseudo;
+    private $email;
 
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="json")
+     * @Groups({"read:User:item"})
      */
-    private $mail;
+    private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     * @Groups({"picture","user","sign-up","update-account"})
+     * @Assert\NotBlank
      */
     private $password;
 
     /**
+     * @ORM\Column(type="string", length=64)
+     * @Groups({"picture","user","read:User:item","sign-up","update-account"})
+     * @Assert\NotBlank
+     */
+    private $pseudo;
+
+    /**
      * @ORM\Column(type="string", length=500, nullable=true)
+     * @Groups({"picture","read:User:item","update-bio"})
      */
     private $bio;
 
-    /**
+     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"picture","read:User:item","update-bio"})
      */
     private $avatar;
 
@@ -49,36 +76,38 @@ class User
      */
     private $createdAt;
 
-    /**
+     /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $updatedAt;
 
-    /**
+     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="user")
      */
     private $reviews;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="user")
-     */
-    private $picture;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Role::class, inversedBy="user")
-     */
-    private $role;
 
     /**
      * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user")
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="user")
+     */
+    private $pictures;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
-        $this->picture = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->roles= ['ROLE_USER'];
+        $this->createdAt= new DateTimeImmutable();
+    }
+
+    public function __toString()
+    {
+        return $this->reviews;
     }
 
     public function getId(): ?int
@@ -86,26 +115,44 @@ class User
         return $this->id;
     }
 
-    public function getPseudo(): ?string
+    public function getEmail(): ?string
     {
-        return $this->pseudo;
+        return $this->email;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setEmail(string $email): self
     {
-        $this->pseudo = $pseudo;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getMail(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->mail;
+        return (string) $this->email;
     }
 
-    public function setMail(string $mail): self
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
     {
-        $this->mail = $mail;
+        return (string) $this->email;
+    }
+
+    public function getRoles(): ?array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
@@ -118,6 +165,38 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
@@ -205,13 +284,13 @@ class User
      */
     public function getPicture(): Collection
     {
-        return $this->picture;
+        return $this->pictures;
     }
 
     public function addPicture(Picture $picture): self
     {
-        if (!$this->picture->contains($picture)) {
-            $this->picture[] = $picture;
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
             $picture->setUser($this);
         }
 
@@ -220,24 +299,12 @@ class User
 
     public function removePicture(Picture $picture): self
     {
-        if ($this->picture->removeElement($picture)) {
+        if ($this->pictures->removeElement($picture)) {
             // set the owning side to null (unless already changed)
             if ($picture->getUser() === $this) {
                 $picture->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getRole(): ?Role
-    {
-        return $this->role;
-    }
-
-    public function setRole(?Role $role): self
-    {
-        $this->role = $role;
 
         return $this;
     }
@@ -271,4 +338,23 @@ class User
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Picture>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function getLikedPictures(){
+        $pictures= [];
+
+        foreach ($this->likes as $like) {
+            $pictures[]=$like->getPicture();
+        }
+
+        return $pictures;
+    }
+
 }

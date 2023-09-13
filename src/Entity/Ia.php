@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=IaRepository::class)
@@ -17,22 +19,27 @@ class Ia
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"picture","add-picture"})
+     * @Assert\NotBlank
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"picture"})
+     * @Groups({"picture","add-review","add-picture"})
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"picture","add-review","add-picture"})
      */
     private $link;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
+     * @Groups({"picture"})
      */
     private $description;
 
@@ -47,7 +54,7 @@ class Ia
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="ia")
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="ia", cascade={"persist", "remove"})
      */
     private $pictures;
 
@@ -55,6 +62,12 @@ class Ia
     {
         $this->pictures = new ArrayCollection();
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
 
     public function getId(): ?int
     {

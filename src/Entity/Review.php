@@ -6,6 +6,8 @@ use App\Repository\ReviewRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use DateTimeImmutable;
 
 /**
  * @ORM\Entity(repositoryClass=ReviewRepository::class)
@@ -16,16 +18,19 @@ class Review
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"picture","prompt"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=500)
+     * @Groups({"picture","prompt","add-review"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"picture"})
      */
     private $createdAt;
 
@@ -36,14 +41,22 @@ class Review
 
     /**
      * @ORM\ManyToOne(targetEntity=Picture::class, inversedBy="reviews")
+     * @ORM\JoinColumn(name="picture_id", referencedColumnName="id")
+     * 
      */
     private $picture;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
+     * 
      */
     private $user;
 
+    public function __toString()
+    {
+        return $this->getContent();
+        
+    }
 
 
     public function getId(): ?int

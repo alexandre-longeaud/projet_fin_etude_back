@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}mAIsterpiece<i class="bi bi-robot"></i>{% endblock %}
+
+{% block body %}
+<div class="container col-6">
+ {% if 'ROLE_ADMIN' in user.roles %}
+                    <h1>Administrateur</h1>
+                    {% elseif 'ROLE_USER' in user.roles %}
+                    <h1>Utilisateur</h1>
+                    {% endif %}
+  
+  
+{% for message in app.flashes('info') %}
+ <div class="alert alert-warning col-4 mt-4" role="alert">
+   {{ message }}
+</div>       
+{% endfor %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Pseudo</th>
+                <td>{{ user.pseudo }}</td>
+            </tr>
+            <tr>
+                <th>Bio</th>
+                <td>{{ user.bio }}</td>
+            </tr>
+            <tr>
+                <th>Avatar</th>
+                <td>
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar }}" alt="Avatar" style="max-width: 200px; max-height: 200px;">
+                    {% else %}
+                        No avatar
+                    {% endif %}
+                </td>            </tr>
+            <tr>
+                <th>Images</th>
+                <td>
+                    {% for picture in user.pictures %}
+                        <img src="{{ picture.fileName }}" alt="Picture {{ picture.id }}" style="max-width: 200px; max-height: 200px;">
+                    {% endfor %}
+                </td>            
+                </tr>            
+        </tbody>
+    </table>
+
+    <a class="btn btn-warning mb-4" href="{{ path('app_back_list', {'id': user.id}) }}"><i class="bi bi-arrow-return-left"></i></a>
+     <a class="btn btn-warning mb-4" href="{{ path('app_back_edit', {'id': user.id}) }}"><i class="bi bi-pen"></i></a>
+</div>
+{% endblock %}

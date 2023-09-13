@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}mAIsterpiece<i class="bi bi-robot"></i>{% endblock %}
+{% block body %}
+<div class="container col-6">
+<h1 class="my-3">Modification des informations personnelles</h1>
+{{ form_start(form) }}
+{{ form_rest(form) }}
+
+<button class="btn btn-warning mb-4" type="submit">Enregistrer</button>
+
+{{ form_end(form) }}
+
+</div>
+{% endblock %}

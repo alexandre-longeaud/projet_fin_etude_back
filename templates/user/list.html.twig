@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}mAIsterpiece{% endblock %}
+
+{% block body %}
+
+<div class="container">
+	<table class="table table-hover col-6">
+    <a class="btn btn-warning mt-3" href="{{ path('app_back_add') }}">Ajouter <i class="bi bi-person-plus-fill"></i></a>
+   
+{% for message in app.flashes('success') %}
+   <div class="alert alert-success col-6 mt-4" role="alert">
+   {{ message }}
+</div>    
+{% endfor %}
+
+{% for message in app.flashes('warning') %}
+<div class="alert alert-danger col-4 mt-4" role="alert">
+     {{ message }}
+</div>
+{% endfor %}
+
+
+		<thead>
+			<tr>
+				<th scope="col">Utilisateur</th>
+				<th scope="col">Pseudo</th>
+				<th scope="col">Email</th>
+				<th scope="col">Role</th>
+				<th scope="col">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.email }}</td>
+           
+                <td>
+                    {# on peut utiliser l'opérateur "in" de Twig pour afficher le rôle de l'utilisateur #}
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                    Administrateur
+                    {% elseif 'ROLE_USER' in user.roles %}
+                    Utilisateur
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-secondary" href="{{ path('app_back_send', {'id': user.id}) }}"><i class="bi bi-envelope"></i></a>
+                    <a class="btn btn-success" href="{{ path('app_back_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-warning" href="{{ path('app_back_edit', {'id': user.id}) }}"><i class="bi bi-pen"></i></a>
+                    <a class="btn btn-danger" href="{{ path('app_back_delete', {'id': user.id}) }}"><i class="bi bi-person-x"></i></a>
+                    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

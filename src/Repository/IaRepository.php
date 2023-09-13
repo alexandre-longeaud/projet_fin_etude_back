@@ -39,6 +39,8 @@ class IaRepository extends ServiceEntityRepository
         }
     }
 
+    // TODO display all the AI with the url
+
 //    /**
 //     * @return Ia[] Returns an array of Ia objects
 //     */
